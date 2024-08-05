@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axiosConfig';
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../axiosConfig'
 
 const Register = () => {
-  const [fullname, setFullname] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const navigate = useNavigate();
+  const [fullname, setFullname] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [whatsapp, setWhatsapp] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
+      setError('Passwords do not match')
+      return
     }
     try {
       // Registration request
@@ -25,23 +25,23 @@ const Register = () => {
         username: username,
         password: password,
         whatsapp: whatsapp
-      });
+      })
 
       if (response.data) {
-        setSuccess('Registration successful. You can now log in.');
-        setError('');
-        navigate('/admin/dashboard');
+        setSuccess('Registration successful. You can now log in.')
+        setError('')
+        navigate('/admin/dashboard')
       }
     } catch (err) {
-      console.error('Error registering:', err);
-      setError('Registration failed. Please try again.');
-      setSuccess('');
+      console.error('Error registering:', err)
+      setError('Registration failed. Please try again.')
+      setSuccess('')
     }
-  };
+  }
 
   const handleloginRedirect = () => {
-    navigate('/login');
-  };
+    navigate('/login')
+  }
 
   const pageWrapperStyle = {
     height: '100vh',
@@ -49,7 +49,7 @@ const Register = () => {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f8f9fa'
-  };
+  }
 
   const cardStyle = {
     maxWidth: '400px',
@@ -57,7 +57,7 @@ const Register = () => {
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
     borderRadius: '10px',
     backgroundColor: '#fff'
-  };
+  }
 
   return (
     <div style={pageWrapperStyle}>
@@ -145,7 +145,7 @@ const Register = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

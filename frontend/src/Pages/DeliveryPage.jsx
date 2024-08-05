@@ -5,7 +5,7 @@ import DeliveryForm from '../components/Deliveries/DeliveryForm';
 
 const DeliveryPage = () => {
     return (
-        <div className="container-fluid">
+        <div className="container">
             <div className="row">
                 <div className="col-xl-12">
                     <Routes>

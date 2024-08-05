@@ -12,12 +12,12 @@ const Layout = () => {
     const isAdmin = roles.includes('Admin');
 
     return (
-        <div>
+        <div id="main-wrapper">
             <NavHeader />
             <Header />
             {isAdmin && <Sidebar />}
 
-            <div className="content-body" style={{ display: 'flex', flexDirection: 'column',minHeight: '100vh' }}>
+            <div className="content-body">
                 <div className="container-fluid">
                     <div className="row">
                         {isAdmin && <Widgets />}

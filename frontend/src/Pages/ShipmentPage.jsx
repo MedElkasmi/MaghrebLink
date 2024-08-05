@@ -1,12 +1,12 @@
-import React from 'react';
-import { Routes, Route} from 'react-router-dom';
-import ShipmentList from '../components/Shipments/ShipmentList';
-import ShipmentForm from '../components/Shipments/ShipmentForm';
-import RemovedShipmentList from '../components/Shipments/RemovedShipmentList';
+import React from 'react'
+import { Routes, Route} from 'react-router-dom'
+import ShipmentList from '../components/Shipments/ShipmentList'
+import ShipmentForm from '../components/Shipments/ShipmentForm'
+import RemovedShipmentList from '../components/Shipments/RemovedShipmentList'
 
 const ShipmentPage = () => {
     return (
-        <div className="container-fluid">
+        <div className="container">
                 <div className="row">
                         <div className="col-xl-12">
                             <Routes>
@@ -18,7 +18,7 @@ const ShipmentPage = () => {
                         </div>
                 </div>
         </div>
-    );
-};
+    )
+}
 
 export default ShipmentPage

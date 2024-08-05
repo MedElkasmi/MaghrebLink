@@ -1,11 +1,11 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Tracking from '../components/Tracking/Tracking';
-import TrackingForm from '../components/Tracking/TrackingForm';
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import Tracking from '../components/Tracking/Tracking'
+import TrackingForm from '../components/Tracking/TrackingForm'
 
 const TrackingPage = () => {
   return (
-    <div className="container-fluid">
+    <div className="container">
         <div className="row">
             <div className="col-xl-12">
               <Routes>
@@ -15,7 +15,7 @@ const TrackingPage = () => {
             </div>
         </div>
     </div>
-  );
-};
+  )
+}
 
-export default TrackingPage;
+export default TrackingPage

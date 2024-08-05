@@ -1,11 +1,11 @@
-import React from 'react';
-import { Routes, Route} from 'react-router-dom';
-import DriverList from '../components/Drivers/DriverList';
-import DriverForm from '../components/Drivers/DriverForm';
+import React from 'react'
+import { Routes, Route} from 'react-router-dom'
+import DriverList from '../components/Drivers/DriverList'
+import DriverForm from '../components/Drivers/DriverForm'
 
 const DriverPage = () => {
     return (
-        <div className="container-fluid">
+        <div className="container">
                 <div className="row">
                         <div className="col-xl-12">
                             <Routes>
@@ -16,7 +16,7 @@ const DriverPage = () => {
                         </div>
                 </div>
         </div>
-    );
-};
+    )
+}
 
 export default DriverPage
