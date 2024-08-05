@@ -1,11 +1,11 @@
-import { Routes, Route} from 'react-router-dom';
-import GoodsList from '../components/goods/GoodsList';
-import GoodsForm from '../components/goods/GoodsForm';
-import RemovedGoodsList from '../components/goods/RemovedGoodsList';
+import { Routes, Route} from 'react-router-dom'
+import GoodsList from '../components/goods/GoodsList'
+import GoodsForm from '../components/goods/GoodsForm'
+import RemovedGoodsList from '../components/goods/RemovedGoodsList'
 
 const GoodsPage = () => {
     return (
-        <div className="container-fluid">
+        <div className="container">
                 <div className="row">
                         <div className="col-xl-12">
                             <Routes>
@@ -17,7 +17,7 @@ const GoodsPage = () => {
                         </div>
                 </div>
         </div>
-    );
-};
+    )
+}
 
 export default GoodsPage

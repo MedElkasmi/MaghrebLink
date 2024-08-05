@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axiosConfig';
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../axiosConfig'
 
 const ForgetPassword = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const response = await axiosInstance.post('/forgot-password', { email });
-      setMessage('Password reset link has been sent to your email');
-      setError('');
+      const response = await axiosInstance.post('/forgot-password', { email })
+      setMessage('Password reset link has been sent to your email')
+      setError('')
     } catch (err) {
-      console.error('Error sending password reset email:', err);
-      setError('Failed to send password reset email');
-      setMessage('');
+      console.error('Error sending password reset email:', err)
+      setError('Failed to send password reset email')
+      setMessage('')
     }
-  };
+  }
 
   const handleBack = () => {
-    navigate('/login');
-  };
+    navigate('/login')
+  }
 
   return (
     <div className="page-wraper vh-100">
@@ -73,7 +73,7 @@ const ForgetPassword = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ForgetPassword;
+export default ForgetPassword

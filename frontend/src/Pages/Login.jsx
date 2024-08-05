@@ -1,48 +1,48 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axiosConfig';
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../axiosConfig'
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault() 
     try {
       const response = await axiosInstance.post('/login', {
         username,
         password,
-      });
+      })
 
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('roles', JSON.stringify(response.data.roles));
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('roles', JSON.stringify(response.data.roles))
 
         if (response.data.roles.includes('Admin')) {
-          navigate('/admin/dashboard');
+          navigate('/admin/dashboard')
         } else if (response.data.roles.includes('Client')) {
-          navigate('/client/tracking');
+          navigate('/client/tracking')
         } else {
-          navigate('/home');
+          navigate('/home')
         }
       } else {
-        setError('Login failed: Invalid token received');
+        setError('Login failed: Invalid token received')
       }
     } catch (err) {
-      console.error('Error logging in:', err);
-      setError('Invalid credentials');
+      console.error('Error logging in:', err)
+      setError('Invalid credentials')
     }
-  };
+  }
 
   const handleRegisterRedirect = () => {
-    navigate('/register');
-  };
+    navigate('/register')
+  }
 
   const handleForgetPasswordRedirect = () => {
-    navigate('/forget-password');
-  };
+    navigate('/forget-password')
+  }
 
   return (
     <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f8f9fa' }}>
@@ -124,7 +124,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

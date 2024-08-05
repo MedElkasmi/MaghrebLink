@@ -1,13 +1,13 @@
-import React from 'react';
-import { Routes, Route} from 'react-router-dom';
-import ClientList from '../components/clients/ClientList';
-import ClientForm from '../components/clients/ClientForm';
-import RemovedClientList from '../components/clients/RemovedClientList';
+import React from 'react'
+import { Routes, Route} from 'react-router-dom'
+import ClientList from '../components/clients/ClientList'
+import ClientForm from '../components/clients/ClientForm'
+import RemovedClientList from '../components/clients/RemovedClientList'
 
 const ClientPage = () => {
   return (
 
-    <div className="container-fluid">
+    <div className="container">
         <div className="row">
             <div className="col-xl-12">
               <Routes>
@@ -19,7 +19,7 @@ const ClientPage = () => {
             </div>
         </div>
     </div>
-  );
-};
+  )
+}
 
-export default ClientPage;
+export default ClientPage
