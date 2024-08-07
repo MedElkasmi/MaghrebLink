@@ -2,112 +2,94 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Goods;
+use App\Http\Requests\GoodsRequest;
+use App\Http\Resources\GoodResource;
+use App\Services\GoodService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class GoodsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    protected $goodService;
+
+    public function __construct(GoodService $goodService)
     {
-        //
-        $query = Goods::with('shipment', 'client', 'receiver'); // Include the shipment relationship
-
-        // if ($request->has('search')) {
-        //     $search = $request->input('search');
-        //     $query->where('quantity', 'like', "%{$search}%")
-        //         ->orWhere('description', 'like', "%{$search}%")
-        //         ->orWhere('weight', 'like', "%{$search}%");
-        // }
-
-        $goods = $query->paginate(10);
-
-        return response()->json($goods);
+        $this->goodService = $goodService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-        $request->validate([
-            'quantity' => 'required',
-            'description' => 'required',
-            'weight' => 'required',
+        $goods = $this->goodService->getGoods($request->all());
+        return response()->json([
+            'data' => GoodResource::collection($goods),
+            'meta' => [
+                'current_page' => $goods->currentPage(),
+                'last_page' => $goods->lastPage(),
+                'per_page' => $goods->perPage(),
+                'total' => $goods->total(),
+            ]
         ]);
-
-        $goods = Goods::create($request->all());
-        return response()->json($goods);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+    public function store(GoodsRequest $request): JsonResponse
     {
-        //
-        $goods = Goods::find($id);
-        return response()->json($goods);
-
+        $goods = $this->goodService->createGood($request->validated());
+        return response()->json(new GoodResource($goods), 201);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Goods $goods)
+    public function show($id): JsonResponse
     {
-        //
+        $goods = $this->goodService->getGoodById($id);
+        return response()->json(new GoodResource($goods));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Goods $goods)
+    public function update(GoodsRequest $request, $id): JsonResponse
     {
-        //
+        $goods = $this->goodService->updateGood($id, $request->validated());
+        return response()->json(new GoodResource($goods));
     }
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+
+    public function destroy($id): JsonResponse
     {
-        //
-        $goods = Goods::find($id);
-        $goods->delete();
-        return response()->json(null, 204);
+        $this->goodService->deleteGood($id);
+        return response()->json(['message' => 'Goods deleted successfully']);
     }
 
-    public function getRemoved() {
-
-        $goods = Goods::onlyTrashed()->with('shipment', 'client', 'receiver')->paginate(10);
-        return response()->json($goods);
+    public function getRemoved(): JsonResponse
+    {
+        $goods = $this->goodService->getRemoved();
+        return response()->json([
+            'data' => GoodResource::collection($goods),
+            'meta' => [
+                'current_page' => $goods->currentPage(),
+                'last_page' => $goods->lastPage(),
+                'per_page' => $goods->perPage(),
+                'total' => $goods->total(),
+            ]
+        ]);
     }
 
-    public function restore($id) {
-        $goods = Goods::withTrashed()->find($id);
-        $goods->restore();
+    public function restore($id): JsonResponse
+    {
+        $this->goodService->restoreGood($id);
         return response()->json(['message' => 'Goods restored successfully']);
     }
 
-    public function totalGoods() {
-        $total = Goods::count();
+    public function forceDelete($id): JsonResponse
+    {
+        $this->goodService->forceDeleteGood($id);
+        return response()->json(['message' => 'Goods permanently deleted successfully']);
+    }
+
+    public function totalGoods(): JsonResponse
+    {
+        $total = $this->goodService->getTotalGoods();
         return response()->json(['total' => $total]);
     }
 
-    public function weight() {
-
-        $total = Goods::sum('weight');
-        return response()->json(['total' => $total]);
+    public function weight(): JsonResponse
+    {
+        $totalWeight = $this->goodService->getTotalWeight();
+        return response()->json(['total' => $totalWeight]);
     }
 }

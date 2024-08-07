@@ -21,7 +21,7 @@ const GoodsList = () => {
                     },
                 });
                 setGoods(response.data.data);
-                setTotalPages(response.data.last_page);
+                setTotalPages(response.data.meta.last_page);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching goods:', error);
