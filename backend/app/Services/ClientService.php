@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Client;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Request;
 
 class ClientService
 {
@@ -16,15 +17,24 @@ class ClientService
         return $this->cacheKey . ':' . md5(serialize($filters));
     }
 
+    protected function clearCache()
+    {
+        Cache::forget($this->cacheKey);
+    }
+
     public function getClients(array $filters)
     {
         $cacheKey = $this->getCacheKey($filters);
 
-        return Cache::remember($cacheKey, 600, function () {
+        return Cache::remember($cacheKey, 600, function () use ($filters) {
             $query = Client::query();
 
             if (isset($filters['search'])) {
-                $query->where('fullname', 'like', "%{$filters['search']}%");
+                $query->where('fullname', 'like', "%{$filters['search']}%")
+                ->orWhere('whatsapp', 'like', "%{$filters['search']}%")
+                ->orWhere('country', 'like', "%{$filters['search']}%")
+                ->orWhere('city', 'like', "%{$filters['search']}%")
+                ->orWhere('address', 'like', "%{$filters['search']}%");    
             } 
             return $query->paginate(10);
         });
@@ -33,7 +43,8 @@ class ClientService
     public function createClient(array $data)
     {
         $client = Client::create($data);
-        $client->clearCache();
+        $this->getCacheKey($data);
+        $this->clearCache();
         return $client;
 
     }
@@ -49,7 +60,7 @@ class ClientService
     {
         $client = $this->getClientById($id);
         $client->update($data);
-        $client->clearCahce();
+        $this->clearCache();
         Cache::forget('client:{$id}');
 
         return $client;
@@ -58,7 +69,7 @@ class ClientService
     public function deleteClient(int $id)
     {
         $client = $this->getClientById($id);
-        $client->clearCahce();
+        $this->clearCache();
         Cache::forget('client:{$id}');
         $client->delete();
     }
@@ -67,7 +78,7 @@ class ClientService
     public function restoreClient(int $id)
     {
         $client = Client::withTrashed()->findOrFail($id);
-        $client->clearCahce();
+        $this->clearCache();
         Cache::forget('client:{$id}');
         $client->restore();
     }
@@ -75,6 +86,7 @@ class ClientService
     public function forceDeleteClient(int $id)
     {
         $client = Client::withTrashed()->findOrFail($id);
+        $this->clearCache();
         $client->forceDelete();
     }
 
@@ -86,5 +98,13 @@ class ClientService
     public function countClients(): int
     {
         return Client::count();
+    }
+
+    public function searchClients(Request $request)
+    {
+        $query = $request->input('query');
+        $clients = Client::where('fullname', 'like', "%{$query}%")->get();
+
+        return response()->json($clients);
     }
 }

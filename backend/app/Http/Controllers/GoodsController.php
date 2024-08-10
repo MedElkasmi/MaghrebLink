@@ -36,7 +36,6 @@ class GoodsController extends Controller
         $goods = $this->goodService->createGood($request->validated());
         return response()->json(new GoodResource($goods), 201);
     }
-
     public function show($id): JsonResponse
     {
         $goods = $this->goodService->getGoodById($id);

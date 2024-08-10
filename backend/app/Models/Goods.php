@@ -17,12 +17,9 @@ class Goods extends Model
         'product_code',
         'client_id',
         'receiver_id',
-        'category',
-        'quantity',
         'weight',
         'price',	
         'storage_location',
-        'description',
         'qr_code'
     ];
 
@@ -65,7 +62,7 @@ class Goods extends Model
             }
         } while (self::where('product_code', $productCode)->exists());
 
-    return $productCode;
+        return $productCode;
     }
 
 }

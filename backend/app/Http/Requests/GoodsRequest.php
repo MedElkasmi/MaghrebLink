@@ -22,13 +22,12 @@ class GoodsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quantity' => 'required|integer',
-            'description' => 'required|string|max:255',
+
+            'shipment_id' => 'required|exists:shipments,id',
+            'client_id' => 'required|exists:clients,id',
+            'receiver_id' => 'required|exists:drivers,id',
             'weight' => 'required|numeric',
-            'price' => 'required|numeric',
-            'category' => 'required|string|max:255',
             'storage_location' => 'required|string|max:255',
-            'qr_code' => 'nullable|string|max:255',
         ];
     }
 }

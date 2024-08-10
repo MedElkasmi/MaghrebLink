@@ -1,43 +1,42 @@
 // src/components/clients/ClientForm.jsx
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import axiosInstance from '../../axiosConfig';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import axiosInstance from '../../axiosConfig'
+import { toast } from 'react-toastify'
 
 const ClientForm = () => {
-  const [fullname, setfullName] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [country, setCountry] = useState('');
-  const [city, setCity] = useState('');
-  const [address, setAddress] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const [fullname, setfullName] = useState('')
+  const [whatsapp, setWhatsapp] = useState('')
+  const [country, setCountry] = useState('')
+  const [city, setCity] = useState('')
+  const [address, setAddress] = useState('')
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
+  const { id } = useParams()
 
   useEffect(() => {
     if (id) {
       const fetchClient = async () => {
         try {
-          
-          const response = await axiosInstance.get(`/clients/${id}`);
-          const client = response.data;
-          setfullName(client.fullname);
-          setWhatsapp(client.whatsapp);
-          setCountry(client.country);
-          setCity(client.city);
-          setAddress(client.address);
+          const response = await axiosInstance.get(`/clients/${id}`)
+          const client = response.data
+          setfullName(client.fullname)
+          setWhatsapp(client.whatsapp)
+          setCountry(client.country)
+          setCity(client.city)
+          setAddress(client.address)
         } catch (error) {
-          console.error('Error fetching client:', error);
+          console.error('Error fetching client:', error)
         }
-      };
+      }
 
-      fetchClient();
+      fetchClient()
     }
-  }, [id]);
+  }, [id])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       if (id) {
         await axiosInstance.put(`/clients/${id}`, {
@@ -46,160 +45,142 @@ const ClientForm = () => {
           country,
           city,
           address,
-        });
-        toast.success('Client updated successfully!');
+        })
+        toast.success('Client updated successfully!')
       } else {
-        await axiosInstance.post('/clients', {
+        await axiosInstance.post('/clients/add', {
           fullname,
           whatsapp,
           country,
           city,
           address,
-        });
-        toast.success('Client added successfully!');
+        })
+        toast.success('Client added successfully!')
       }
-      navigate('/admin/clients');
+      navigate('/admin/clients')
     } catch (err) {
-      console.error('Error saving client:', err);
-      setError('Error saving client');
-      toast.error('Error saving client');
+      console.error('Error saving client:', err)
+      setError('Error saving client')
+      toast.error('Error saving client')
     }
-  };
+  }
 
   return (
-
-          <div className="card">
-            <div className="card-header">
-              <h4 className="card-title">{id ? 'Edit Client' : 'Add Client'}</h4>
-            </div>
-            <div className="card-body">
-              <div className="form-validation">
-                <form className="needs-validation" onSubmit={handleSubmit}>
-                  <div className="row">
-                    <div className="col-xl-12">
-                      <div className="mb-3 row">
-                        <label
-                          className="col-lg-4 col-form-label"
-                          htmlFor="validationCustom01"
-                        >
-                          Full Name
-                          <span className="text-danger">*</span>
-                        </label>
-                        <div className="col-lg-6">
-                          <input
-                            className="form-control"
-                            id="validationCustom01"
-                            placeholder="Enter a Name.."
-                            type="text"
-                            value={fullname}
-                            onChange={(e) => setfullName(e.target.value)}
-                            required
-                          />
-                          <div className="invalid-feedback">
-                            Please enter Full Name.
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label
-                          className="col-lg-4 col-form-label"
-                          htmlFor="validationCustom02"
-                        >
-                          Whatsapp Number <span className="text-danger">*</span>
-                        </label>
-                        <div className="col-lg-6">
-                          <input
-                            className="form-control"
-                            id="validationCustom02"
-                            placeholder="Your valid whatsapp number.."
-                            type="phone"
-                            value={whatsapp}
-                            onChange={(e) => setWhatsapp(e.target.value)}
-                            required
-                          />
-                          <div className="invalid-feedback">
-                            Please enter a Whatsapp Number.
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label
-                          className="col-lg-4 col-form-label"
-                          htmlFor="validationCustom03"
-                        >
-                          Country
-                          <span className="text-danger">*</span>
-                        </label>
-                        <div className="col-lg-6">
-                          <input
-                            className="form-control"
-                            id="validationCustom03"
-                            placeholder="Please enter a phone number."
-                            type="text"
-                            value={country}
-                            onChange={(e) => setCountry(e.target.value)}
-                          />
-                          <div className="invalid-feedback">
-                            Please enter Country.
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mb-3 row">
-                        <label
-                          className="col-lg-4 col-form-label"
-                          htmlFor="validationCustom03"
-                        >
-                          City
-                          <span className="text-danger">*</span>
-                        </label>
-                        <div className="col-lg-6">
-                          <input
-                            className="form-control"
-                            id="validationCustom03"
-                            placeholder="Please enter a city."
-                            type="text"
-                            value={city}
-                            onChange={(e) => setCity(e.target.value)}
-                          />
-                          <div className="invalid-feedback">
-                            Please enter an address
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mb-3 row">
-                        <label
-                          className="col-lg-4 col-form-label"
-                          htmlFor="validationCustom03"
-                        >
-                          Address
-                          <span className="text-danger">*</span>
-                        </label>
-                        <div className="col-lg-6">
-                          <input
-                            className="form-control"
-                            id="validationCustom03"
-                            placeholder="Please enter a phone number."
-                            type="text"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                          />
-                          <div className="invalid-feedback">
-                            Please enter an address
-                          </div>
-                        </div>
-                      </div>
-                      {error && <p>{error}</p>}
-                      <button type="submit" class="btn light btn-primary">{id ? 'Update' : 'Create'}</button>
-                    </div>
-                  </div>
-                </form>
+    <div
+      className="offcanvas offcanvas-end customeoff"
+      tabIndex={-1}
+      id="offcanvasExample"
+    >
+      <div className="offcanvas-header">
+        <h5 className="modal-title" id="#gridSystemModal">
+          Client insertion
+        </h5>
+        <button
+          type="button"
+          className="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        >
+          <i className="fa-solid fa-xmark" />
+        </button>
+      </div>
+      <div className="offcanvas-body">
+        <div className="container-fluid">
+          <form onSubmit={handleSubmit}>
+            <div className="row">
+              <div className="col-xl-6 mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
+                  Full Name <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder=""
+                  value={fullname}
+                  onChange={(e) => setfullName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="col-xl-6 mb-3">
+                <label
+                  htmlFor="exampleFormControlInput2"
+                  className="form-label"
+                >
+                  whatsapp<span className="text-danger">*</span>
+                </label>
+                <input
+                  type="phone"
+                  className="form-control"
+                  id="exampleFormControlInput2"
+                  placeholder=""
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="col-xl-6 mb-3">
+                <label className="form-label">
+                  Country<span className="text-danger">*</span>
+                </label>
+                <select
+                  className="default-select style-1 form-control"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                >
+                  <option data-display="Select">Please select</option>
+                  <option value="Morocco">Morocco</option>
+                  <option value="Spain">Spain</option>
+                </select>
+              </div>
+              <div className="col-xl-6 mb-3">
+                <label
+                  htmlFor="exampleFormControlInput4"
+                  className="form-label"
+                >
+                  City<span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput4"
+                  placeholder=""
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="col-xl-12 mb-3">
+                <label
+                  htmlFor="exampleFormControlInput4"
+                  className="form-label"
+                >
+                  Address<span className="text-danger">*</span>
+                </label>
+                <textarea
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput4"
+                  placeholder=""
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
               </div>
             </div>
-          </div>
+            <div>
+              <button className="btn btn-primary me-1" type="submit">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-  );
-};
-
-export default ClientForm;
+export default ClientForm

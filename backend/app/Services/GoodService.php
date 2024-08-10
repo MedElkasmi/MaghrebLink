@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Goods;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class GoodService
 {

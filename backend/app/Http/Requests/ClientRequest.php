@@ -24,7 +24,7 @@ class ClientRequest extends FormRequest
         return [
             //
             'fullname' => 'required|string|max:255',
-            'whatsapp' => 'required|numeric|unique:clients,whatsapp,' . $this->id,
+            'whatsapp' => 'required|numeric',
             'country' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'address' => 'required|string|max:255',

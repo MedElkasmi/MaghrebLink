@@ -17,14 +17,11 @@ class GoodResource extends JsonResource
         return [
             'id' => $this->id,
             'product_code' => $this->product_code,
-            'quantity' => $this->quantity,
-            'description' => $this->description,
-            'weight' => $this->weight,
-            'storage_location' => $this->storage_location,
-            'category' => $this->category,
             'shipment' => new ShipmentResource($this->whenLoaded('shipment')),
             'client' => new ClientResource($this->whenLoaded('client')),
             'receiver' => new ReceiverResource($this->whenLoaded('receiver')),
+            'weight' => $this->weight,
+            'storage_location' => $this->storage_location,
             'created_at' => $this->created_at,
         ];
     }
