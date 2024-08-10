@@ -7,6 +7,7 @@ use App\Http\Requests\ClientRequest;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\ClientResource;
 use Illuminate\Http\Request;
+use App\Models\Client;
 
 class ClientController extends Controller
 {
@@ -85,5 +86,20 @@ class ClientController extends Controller
     {
         $totalClients = $this->clientService->countClients();
         return response()->json(['total' => $totalClients]);
+    }
+
+    public function search(Request $request)
+    {
+        // return Client::where('fullname', 'like', "%{$search}%")
+        // ->orWhere('whatsapp', 'like', "%{$search}%")
+        // ->orWhere('country', 'like', "%{$search}%")
+        // ->orWhere('city', 'like', "%{$search}%")
+        // ->orWhere('address', 'like', "%{$search}%")
+        // ->paginate(10);
+
+        $query = $request->input('query');
+        $clients = Client::where('fullname', 'like', "%{$query}%")->get();
+
+        return response()->json($clients);
     }
 }

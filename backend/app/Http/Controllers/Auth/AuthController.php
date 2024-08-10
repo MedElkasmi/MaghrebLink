@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\HasApiTokens;
 
 class AuthController extends Controller
 {
@@ -47,10 +46,6 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Server Error'], 500);
         }
-    }
-
-    public function forgetPassword(Request $request) {
-        
     }
 
     public function logout(Request $request) {

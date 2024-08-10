@@ -30,11 +30,12 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::middleware(['auth:sanctum'])->group(function () {
 
     // Client Routes
-    Route::middleware(['role:Admin'])->group(function () {
+    Route::middleware([])->group(function () {
         Route::prefix('/clients')->group(function () {
+            Route::post('/add', [ClientController::class, 'store']);
+            Route::get('/search', [ClientController::class, 'search']);
             Route::get('/removed', [ClientController::class, 'getRemoved']);
             Route::get('/', [ClientController::class, 'index']);
-            Route::post('/', [ClientController::class, 'store']);
             Route::get('/total', [ClientController::class, 'totalClients']);
             Route::get('/{id}', [ClientController::class, 'show']);
             Route::put('/{id}', [ClientController::class, 'update']);
@@ -78,7 +79,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/weight', [GoodsController::class, 'weight']);
         Route::get('/{id}', [GoodsController::class, 'show']);
         Route::get('/', [GoodsController::class, 'index']);
-        Route::post('/', [GoodsController::class, 'store']);
+        Route::post('/store', [GoodsController::class, 'store']);
         Route::put('/{id}', [GoodsController::class, 'update']);
         Route::delete('/{id}', [GoodsController::class, 'destroy']);
         Route::patch('/{id}/restore', [GoodsController::class, 'restore']);

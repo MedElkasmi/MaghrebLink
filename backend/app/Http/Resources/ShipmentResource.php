@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ClientResource extends JsonResource
+class ShipmentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,9 @@ class ClientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'fullname' => $this->fullname,
-            'whatsapp' => $this->whatsapp,
-            'country' => $this->country,
-            'city' => $this->city,
-            'address' => $this->address,
+            'tracking_number' => $this->tracking_number,
+            'origin' => $this->origin,
+            'destination' => $this->destination,
             'created_at' => $this->created_at->todateTimeString(),
             'updated_at' => $this->updated_at->todateTimeString(),
         ];
