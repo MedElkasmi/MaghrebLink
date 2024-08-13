@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useContext } from 'react'
 import axiosInstance from '../../axiosConfig'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Pagination from '../Pagination'
+import { GlobalStateContext } from '../../context/GlobalState.jsx'
 const RemovedClientList = () => {
-  const [clients, setClients] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [searchQuery, setSearchQuery] = useState('')
+  const {
+    clients,
+    setClients,
+    currentPage,
+    setCurrentPage,
+    searchQuery,
+    setSearchQuery,
+    loading,
+    setLoading,
+    totalPages,
+    setTotalPages,
+  } = useContext(GlobalStateContext)
 
   useEffect(() => {
     const fetchRemovedClients = async () => {
@@ -19,7 +26,7 @@ const RemovedClientList = () => {
             search: searchQuery,
           },
         })
-        setClients(response.data.data || []) // Handle cases where data is undefined
+        setClients(response.data.data || [])
         setTotalPages(response.data.meta.last_page || 1)
         setLoading(false)
       } catch (error) {
@@ -29,7 +36,7 @@ const RemovedClientList = () => {
     }
 
     fetchRemovedClients()
-  }, [currentPage, searchQuery])
+  }, [currentPage, searchQuery, setClients])
 
   const handlePageChange = (page) => {
     setCurrentPage(page)

@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useContext } from 'react'
 import axiosInstance from '../../axiosConfig'
 import { toast } from 'react-toastify'
 import Pagination from '../Pagination'
+import { GlobalStateContext } from '../../context/GlobalState.jsx'
 
 const RemovedGoodsList = () => {
-  const [goods, setGoods] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [searchQuery, setSearchQuery] = useState('')
+  const {
+    goods,
+    setGoods,
+    currentPage,
+    setCurrentPage,
+    searchQuery,
+    setSearchQuery,
+    loading,
+    setLoading,
+    totalPages,
+    setTotalPages,
+  } = useContext(GlobalStateContext)
 
   useEffect(() => {
     const fetchGoods = async () => {

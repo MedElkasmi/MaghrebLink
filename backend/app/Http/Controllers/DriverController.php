@@ -4,113 +4,70 @@ namespace App\Http\Controllers;
 
 use App\Models\Driver;
 use Illuminate\Http\Request;
-use App\Models\Shipment;
-use App\Models\Goods;
+use Illuminate\Http\JsonResponse;
+use App\Services\DriverService;
+use App\Http\Resources\DriverResource;
+use App\Http\Requests\DriverRequest;
 
 
 class DriverController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+
+    protected $driverService;
+
+    public function __construct(DriverService $driverService)
     {
-        //
-        $query = Driver::query();
-        $driver = $query->paginate(10);
-        return response()->json($driver);
+        $this->driverService = $driverService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index() 
     {
         //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-        $request->validate([
-            'name' => 'required',
-            'age' => 'required',
-            'phone' => 'required',
-            'license' => 'required',
-            'picture' => 'required',
-            'status' => 'required',
+        $drivers = $this->driverService->getDrivers();
+        return response()->json([
+            'data' => DriverResource::collection($drivers),
+            'meta' => [
+                'current_page' => $drivers->currentPage(),
+                'last_page' => $drivers->lastPage(),
+                'per_page' => $drivers->perPage(),
+                'total' => $drivers->total(),
+            ]
         ]);
+        
+    }
 
-        $driver = Driver::create($request->all());
+    public function store(DriverRequest $request) : JsonResponse
+    {
+        //
+        $drivers = $this->driverService->createDriver($request->validated());
+        return response()->json(new DriverResource($drivers), 201);
+    }
+
+    public function show($id) : JsonResponse
+    {
+        //
+        $driver = $this->driverService->getDriverById($id);
         return response()->json($driver);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+    public function update(DriverRequest $request, Driver $driver) : JsonResponse
     {
         //
-
-        $driver = Driver::findOrFail($id);
-
-        return response()->json($driver);
+        $driver = $this->driverService->updateDriver($driver->id, $request->validated());
+        return response()->json(new DriverResource($driver));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Driver $driver)
+    public function destroy($id) : JsonResponse
     {
         //
+        $this->driverService->deleteDriver($id);
+        return response()->json(['message' => 'Driver deleted successfully']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Driver $driver)
-    {
-        //
-        $request->validate([
-            'name' => 'required',
-            'age' => 'required',
-            'phone' => 'required',
-            'license' => 'required',
-            'picture' => 'required',
-            'status' => 'required',
-        ]);
-
-        $driver = Driver::findOrFail($driver->id);
-        $driver->update($request->all());
-
-        return response()->json($driver, 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
-        Driver::destroy($id);
-        return response()->json(null, 204);
-    }
-
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $drivers = Driver::where('fullname', 'like', "%{$query}%")->get();
-
-        return response()->json($drivers);
-    }
-
-    public function getTotalGoodsWeight($driverId) {
-        $shipments = Shipment::where('driver_id', $driverId)->pluck('id');
-        $totalWeight = Goods::whereIn('shipment_id', $shipments)->sum('weight');
-        return response()->json(['total_weight' => $totalWeight]);
+    public function getTotalGoodsWeight($driverId) : JsonResponse
+    {   
+        $weight = $this->driverService->getTotalGoodsWeight($driverId);
+        return response()->json(['total_weight' => $weight]);
     }
 
 }

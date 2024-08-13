@@ -54,9 +54,9 @@ class GoodsController extends Controller
         return response()->json(['message' => 'Goods deleted successfully']);
     }
 
-    public function getRemoved(): JsonResponse
+    public function getRemoved(Request $request): JsonResponse
     {
-        $goods = $this->goodService->getRemoved();
+        $goods = $this->goodService->getRemoved($request->all());
         return response()->json([
             'data' => GoodResource::collection($goods),
             'meta' => [
@@ -90,5 +90,11 @@ class GoodsController extends Controller
     {
         $totalWeight = $this->goodService->getTotalWeight();
         return response()->json(['total' => $totalWeight]);
+    }
+
+    public function price() : JsonResponse
+    {
+        $totalPrice = $this->goodService->getTotalPrice();
+        return response()->json(['total' => $totalPrice]);
     }
 }

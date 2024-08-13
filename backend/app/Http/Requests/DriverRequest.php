@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GoodsRequest extends FormRequest
+class DriverRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,9 @@ class GoodsRequest extends FormRequest
     public function rules(): array
     {
         return [
-
-            'shipment_id' => 'required|exists:shipments,id',
-            'client_id' => 'required|exists:clients,id',
-            'receiver_id' => 'required|exists:clients,id',
-            'weight' => 'required|numeric',
-            'storage_location' => 'required|string|max:255',
+            //
+            'fullname' => 'required|string|max:255',
+            'whatsapp' => 'required|string|max:255',
         ];
     }
 }

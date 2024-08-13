@@ -1,128 +1,116 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import axiosInstance from '../../axiosConfig';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import axiosInstance from '../../axiosConfig'
+import { toast } from 'react-toastify'
 
 const DriverForm = () => {
-    const [fullname, setfullName] = useState('');
-    const [whatsapp, setwhatsapp] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const { id } = useParams();
-    const navigate = useNavigate();
+  const [fullname, setfullName] = useState('')
+  const [whatsapp, setwhatsapp] = useState('')
+  const { id } = useParams()
+  const navigate = useNavigate()
 
-    useEffect(() => {
-        if (id) {
-            const fetchDriver = async () => {
-                try {
-                    const response = await axiosInstance.get(`/drivers/${id}`);
-                    setfullName(response.data.name);
-                    setwhatsapp(response.data.whatsapp);
-                    setLoading(false);
-                } catch (error) {
-                    console.error('Error fetching driver:', error);
-                    setLoading(false);
-                }
-            };
-            fetchDriver();
+  useEffect(() => {
+    if (id) {
+      const fetchDriver = async () => {
+        try {
+          const { data: driver } = await axiosInstance.get(`/drivers/${id}`)
+          setfullName(driver.name)
+          setwhatsapp(driver.whatsapp)
+        } catch (error) {
+          console.error('Error fetching driver:', error)
         }
-    }, [id]);
+      }
+      fetchDriver()
+    }
+  }, [id])
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        if (id) {
-            try {
-                await axiosInstance.put(`/drivers/${id}`, {
-                    fullname,
-                    whatsapp,
-                });
-                toast.success('Driver updated successfully!');
-            } catch (error) {
-                console.error('Error updating driver:', error);
-                toast.error('Error updating driver');
-            }
-        } else {
-            try {
-                await axiosInstance.post('/drivers', {
-                  fullname,
-                  whatsapp,
-                });
-                toast.success('Driver added successfully!');
-                navigate('/admin/drivers');
-            } catch (error) {
-                console.error('Error adding driver:', error);
-                toast.error('Error adding driver');
-            }
-        }    
-        setLoading(false);
-    };  
-    return (
+  const handleSubmit = async (event) => {
+    event.preventDefault()
 
-        <div className="card">
-        <div className="card-header">
-          <h4 className="card-title">{id ? 'Edit Client' : 'Add Client'}</h4>
-        </div>
-        <div className="card-body">
-          <div className="form-validation">
-            <form className="needs-validation" onSubmit={handleSubmit}>
-              <div className="row">
-                <div className="col-xl-12">
-                  <div className="mb-3 row">
-                    <label
-                      className="col-lg-4 col-form-label"
-                      htmlFor="validationCustom01"
-                    >
-                      Full Name
-                      <span className="text-danger">*</span>
-                    </label>
-                    <div className="col-lg-6">
-                      <input
-                        className="form-control"
-                        id="validationCustom01"
-                        type="text"
-                        value={fullname}
-                        onChange={(e) => setfullName(e.target.value)}
-                        required
-                      />
-                      <div className="invalid-feedback">
-                        Please enter a username.
-                      </div>
-                    </div>
-                  </div>
+    try {
+      const payload = {
+        fullname,
+        whatsapp,
+        status: id ? undefined : 'Pending',
+      }
+      const method = id ? axiosInstance.put : axiosInstance.post
+      const url = id ? `/drivers/${id}` : '/drivers/new'
 
+      await method(url, payload)
+      toast.success(`Driver ${id ? 'updated' : 'added'} successfully!`)
+    } catch (error) {
+      console.error(`Error ${id ? 'updating' : 'adding'} driver:`, error)
+      toast.error(`Error ${id ? 'updating' : 'adding'} driver`)
+    }
+  }
 
-                  <div className="mb-3 row">
-                    <label
-                      className="col-lg-4 col-form-label"
-                      htmlFor="validationCustom03"
-                    >
-                      Whatsapp Number
-                      <span className="text-danger">*</span>
-                    </label>
-                    <div className="col-lg-6">
-                      <input
-                        className="form-control"
-                        id="validationCustom03"
-                        type="text"
-                        value={whatsapp}
-                        onChange={(e) => setwhatsapp(e.target.value)}
-                      />
-                      <div className="invalid-feedback">
-                        Please enter a Whatsapp number.
-                      </div>
-                    </div>
-                  </div>
-
-                  {error && <p>{error}</p>}
-                  <button type="submit" class="btn light btn-primary">{id ? 'Update' : 'Create'}</button>
-                </div>
+  return (
+    <div
+      className="offcanvas offcanvas-end customeoff"
+      tabIndex={-1}
+      id="offcanvasExample"
+    >
+      <div className="offcanvas-header">
+        <h5 className="modal-title" id="#gridSystemModal">
+          Driver Information
+        </h5>
+        <button
+          type="button"
+          className="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        >
+          <i className="fa-solid fa-xmark" />
+        </button>
+      </div>
+      <div className="offcanvas-body">
+        <div className="container-fluid">
+          <form onSubmit={handleSubmit}>
+            <div className="row">
+              <div className="col-xl-6 mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
+                  Full Name <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder=""
+                  value={fullname}
+                  onChange={(e) => setfullName(e.target.value)}
+                  required
+                />
               </div>
-            </form>
-          </div>
+              <div className="col-xl-6 mb-3">
+                <label
+                  htmlFor="exampleFormControlInput2"
+                  className="form-label"
+                >
+                  whatsapp<span className="text-danger">*</span>
+                </label>
+                <input
+                  type="phone"
+                  className="form-control"
+                  id="exampleFormControlInput2"
+                  placeholder=""
+                  value={whatsapp}
+                  onChange={(e) => setwhatsapp(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <button className="btn btn-primary me-1" type="submit">
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-
-    );
-};
-export default DriverForm;
+    </div>
+  )
+}
+export default DriverForm

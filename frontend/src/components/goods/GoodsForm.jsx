@@ -4,9 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Select from 'react-select'
 
-const GoodsForm = () => {
+const GoodsForm = ({ onAddGood }) => {
   const [shipments, setShipments] = useState([])
-  const [clients, setClients] = useState([])
+  const [senderClients, setSenderClients] = useState([])
+  const [receiverClients, setReceiverClients] = useState([])
   const [shipmentId, setShipmentId] = useState('')
   const [senderClientId, setSenderClientId] = useState('')
   const [receiverClientId, setReceiverClientId] = useState('')
@@ -73,11 +74,11 @@ const GoodsForm = () => {
     }
 
     if (searchSenderClientQuery) {
-      fetchClients(searchSenderClientQuery, setClients)
+      fetchClients(searchSenderClientQuery, setSenderClients)
     }
 
     if (searchReceiverClientQuery) {
-      fetchClients(searchReceiverClientQuery, setClients)
+      fetchClients(searchReceiverClientQuery, setReceiverClients)
     }
   }, [searchSenderClientQuery, searchReceiverClientQuery])
 
@@ -92,13 +93,27 @@ const GoodsForm = () => {
         storage_location: storageLocation,
       }
 
+      let newGood
       if (goodId) {
+        // Update existing good
         await axiosInstance.put(`/goods/${goodId}`, goodData)
         toast.success('Good updated successfully!')
+        // Fetch the updated good from the backend
+        const response = await axiosInstance.get(`/goods/${goodId}`)
+        newGood = response.data
       } else {
-        await axiosInstance.post('/goods/store', goodData)
+        // Create new good
+        const response = await axiosInstance.post('/goods/store', goodData)
         toast.success('Good added successfully!')
+        // Fetch the newly created good from the backend
+        newGood = response.data
       }
+
+      // Pass the new or updated good to the parent component
+      if (onAddGood) {
+        onAddGood(newGood)
+      }
+
       navigate('/admin/goods')
     } catch (err) {
       console.error('Error saving good:', err)
@@ -136,10 +151,11 @@ const GoodsForm = () => {
                 </label>
                 <Select
                   id="senderClient"
-                  options={clients}
+                  options={senderClients}
                   value={
-                    clients.find((client) => client.value === senderClientId) ||
-                    null
+                    senderClients.find(
+                      (senderClients) => senderClients.value === senderClientId
+                    ) || null
                   }
                   onInputChange={setSearchSenderClientQuery}
                   onChange={(selected) =>
@@ -160,10 +176,11 @@ const GoodsForm = () => {
                 </label>
                 <Select
                   id="receiverClient"
-                  options={clients}
+                  options={receiverClients || []}
                   value={
-                    clients.find(
-                      (client) => client.value === receiverClientId
+                    receiverClients.find(
+                      (receiverClients) =>
+                        receiverClients.value === receiverClientId
                     ) || null
                   }
                   onInputChange={setSearchReceiverClientQuery}

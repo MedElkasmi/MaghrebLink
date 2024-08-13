@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axiosInstance from '../../axiosConfig'
 import { toast } from 'react-toastify'
 
-const ClientForm = () => {
+const ClientForm = ({ onAddClient }) => {
   const [fullname, setfullName] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [country, setCountry] = useState('')
@@ -37,25 +37,30 @@ const ClientForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    const ClientData = {
+      fullname: fullname,
+      whatsapp: whatsapp,
+      country: country,
+      city: city,
+      address: address,
+    }
     try {
+      let newClient
       if (id) {
-        await axiosInstance.put(`/clients/${id}`, {
-          fullname,
-          whatsapp,
-          country,
-          city,
-          address,
-        })
+        await axiosInstance.put(`/clients/${id}`, ClientData)
         toast.success('Client updated successfully!')
+
+        const response = await axiosInstance.get(`/clients/${id}`)
+        newClient = response.data
       } else {
-        await axiosInstance.post('/clients/add', {
-          fullname,
-          whatsapp,
-          country,
-          city,
-          address,
-        })
+        const response = await axiosInstance.post('/clients/add', ClientData)
         toast.success('Client added successfully!')
+
+        newClient = response.data
+      }
+
+      if (onAddClient) {
+        onAddClient(newClient)
       }
       navigate('/admin/clients')
     } catch (err) {

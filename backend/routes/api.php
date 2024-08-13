@@ -64,6 +64,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Driver Routes
     Route::prefix('drivers')->group(function () {
+        Route::post('/new', [DriverController::class, 'store']);
         Route::get('/{id}/weight', [DriverController::class, 'getTotalGoodsWeight']);
         Route::get('/search', [DriverController::class, 'search']);
         Route::get('/{id}', [DriverController::class, 'show']);
@@ -77,6 +78,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/removed', [GoodsController::class, 'getRemoved']);
         Route::get('/total', [GoodsController::class, 'totalGoods']);
         Route::get('/weight', [GoodsController::class, 'weight']);
+        Route::get('/price', [GoodsController::class, 'price']);
         Route::get('/{id}', [GoodsController::class, 'show']);
         Route::get('/', [GoodsController::class, 'index']);
         Route::post('/store', [GoodsController::class, 'store']);

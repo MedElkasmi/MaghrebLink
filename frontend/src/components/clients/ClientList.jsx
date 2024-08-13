@@ -29,6 +29,19 @@ const ClientList = () => {
     setCurrentPage(1) // Reset to first page on new search
   }
 
+  const handleAddClient = async (newClient) => {
+    try {
+      // Fetch the specific newly added good
+      const response = await axiosInstance.get(`/clients/${newClient.id}`)
+      const fetchedClient = response.data
+
+      // Update the state with the new good at the top of the list
+      setClients((prevGoods) => [fetchedClient, ...prevGoods])
+    } catch (error) {
+      console.error('Error fetching the new client:', error)
+    }
+  }
+
   const handleDelete = async (id) => {
     try {
       await axiosInstance.delete(`/clients/${id}`)
@@ -175,7 +188,7 @@ const ClientList = () => {
             </div>
           </div>
         </div>
-        <ClientForm />
+        <ClientForm onAddClient={handleAddClient} />
       </div>
     </div>
   )
