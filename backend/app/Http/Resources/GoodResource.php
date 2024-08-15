@@ -23,6 +23,7 @@ class GoodResource extends JsonResource
             'weight' => $this->weight,
             'price' => $this->price,
             'storage_location' => $this->storage_location,
+            'status' => $this->status,
             'created_at' => $this->created_at,
         ];
     }

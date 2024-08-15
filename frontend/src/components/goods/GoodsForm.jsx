@@ -39,23 +39,23 @@ const GoodsForm = ({ onAddGood }) => {
     }
   }, [goodId])
 
-  useEffect(() => {
-    const fetchShipments = async () => {
-      try {
-        const response = await axiosInstance.get(`/shipments/search`, {
-          params: { query: searchShipmentQuery },
-        })
-        const options = response.data.map((shipment) => ({
-          value: shipment.id,
-          label: `${shipment.origin} to ${shipment.destination}`,
-        }))
-        setShipments(options)
-      } catch (error) {
-        console.error('Error fetching shipments:', error)
-      }
-    }
-    fetchShipments()
-  }, [searchShipmentQuery])
+  // useEffect(() => {
+  //   const fetchShipments = async () => {
+  //     try {
+  //       const response = await axiosInstance.get(`/shipments/search`, {
+  //         params: { query: searchShipmentQuery },
+  //       })
+  //       const options = response.data.map((shipment) => ({
+  //         value: shipment.id,
+  //         label: `${shipment.origin} to ${shipment.destination}`,
+  //       }))
+  //       setShipments(options)
+  //     } catch (error) {
+  //       console.error('Error fetching shipments:', error)
+  //     }
+  //   }
+  //   fetchShipments()
+  // }, [searchShipmentQuery])
 
   useEffect(() => {
     const fetchClients = async (query, setClientsFunction) => {
@@ -86,11 +86,12 @@ const GoodsForm = ({ onAddGood }) => {
     e.preventDefault()
     try {
       const goodData = {
-        shipment_id: shipmentId,
+        shipment_id: null,
         client_id: senderClientId,
         receiver_id: receiverClientId,
         weight,
         storage_location: storageLocation,
+        status: 'unshipped',
       }
 
       let newGood
@@ -195,7 +196,7 @@ const GoodsForm = ({ onAddGood }) => {
                   Please select a receiver client.
                 </div>
               </div>
-
+              {/* 
               <div className="col-xl-6 mb-3">
                 <label className="form-label">
                   Shipment<span className="text-danger">*</span>
@@ -219,7 +220,7 @@ const GoodsForm = ({ onAddGood }) => {
                 <div className="invalid-feedback">
                   Please select a shipment.
                 </div>
-              </div>
+              </div> */}
 
               <div className="col-xl-6 mb-3">
                 <label htmlFor="weight" className="form-label">

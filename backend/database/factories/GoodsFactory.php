@@ -24,12 +24,10 @@ class GoodsFactory extends Factory
             'product_code' => $this->faker->unique()->numerify('P###'),
             'client_id' => Client::factory(),
             'receiver_id' => Client::factory(),
-            'category' => $this->faker->randomElement(['Clothes', 'Food', 'Medicines']),
-            'quantity' => $this->faker->numberBetween(1, 100),
             'weight' => $this->faker->randomFloat(2, 0.5, 50),
             'price' => $this->faker->randomFloat(2, 1, 1000),
-            'storage_location' => $this->faker->randomElement(['Alhoceima', 'Nador','Madrid','Barcelona']),
-            'description' => $this->faker->sentence,        
+            'storage_location' => $this->faker->randomElement(['Alhoceima', 'Nador','Madrid','Granada']),    
+            'status' => $this->faker->randomElement(['unshipped', 'shipped']),  
         ];
     }
 }

@@ -16,13 +16,12 @@ return new class extends Migration
             $table->id();
             $table->string('tracking_number', 100)->unique();
             $table->unsignedBigInteger('driver_id')->nullable();
-            $table->string('origin');
-            $table->string('destination');
             $table->date('shipment_date')->nullable();
             $table->date('arrived_date')->nullable();
-            $table->string('status');
+            $table->string('status')->enum(['In-Transit', 'Arrived']);
             $table->string('qr_code')->nullable();  // QR code field
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('driver_id')->references('id')->on('drivers')->onDelete('cascade');
         });

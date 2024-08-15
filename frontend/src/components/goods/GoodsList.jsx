@@ -18,7 +18,7 @@ const GoodsList = () => {
     setSearchQuery,
   } = useContext(GlobalStateContext)
 
-  const { loading, totalPages } = useGoods(currentPage, searchQuery)
+  const { totalPages } = useGoods(currentPage, searchQuery)
   const handlePageChange = (page) => {
     setCurrentPage(page)
   }
@@ -66,6 +66,17 @@ const GoodsList = () => {
     }))
 
     return csvData
+  }
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'shipped':
+        return <span className="badge light badge-success">shipped</span>
+      case 'unshipped':
+        return <span className="badge light badge-warning">unshipped</span>
+      default:
+        return <span>{status}</span>
+    }
   }
 
   return (
@@ -118,9 +129,6 @@ const GoodsList = () => {
                   <thead>
                     <tr>
                       <th>
-                        <strong>ID</strong>
-                      </th>
-                      <th>
                         <strong>Shipment Reference</strong>
                       </th>
                       <th>
@@ -142,6 +150,9 @@ const GoodsList = () => {
                         <strong>Storage Location</strong>
                       </th>
                       <th>
+                        <strong>Status</strong>
+                      </th>
+                      <th>
                         <strong>Storage Date</strong>
                       </th>
                       <th>
@@ -152,9 +163,6 @@ const GoodsList = () => {
                   <tbody>
                     {goods.map((good) => (
                       <tr key={good.id}>
-                        <td>
-                          <strong>{good.id}</strong>
-                        </td>
                         <td>
                           <div className="d-flex align-items-center">
                             <span className="w-space-no">
@@ -172,6 +180,7 @@ const GoodsList = () => {
                         <td>{good.weight}</td>
                         <td>{good.price}</td>
                         <td>{good.storage_location}</td>
+                        <td>{getStatusBadge(good.status)}</td>
                         <td>
                           {new Date(good.created_at).toLocaleDateString()}
                         </td>

@@ -8,6 +8,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [clients, setClients] = useState([])
   const [goods, setGoods] = useState([])
   const [drivers, setDrivers] = useState([])
+  const [shipments, setShipments] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
@@ -20,6 +21,8 @@ export const GlobalStateProvider = ({ children }) => {
         setClients,
         goods,
         setGoods,
+        shipments,
+        setShipments,
         drivers,
         setDrivers,
         currentPage,

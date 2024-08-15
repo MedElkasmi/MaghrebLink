@@ -18,7 +18,7 @@ class DriverResource extends JsonResource
             'id' => $this->id,
             'fullname' => $this->fullname,
             'whatsapp' => $this->whatsapp,
-            'status' => $this->address,
+            'status' => $this->status,
             'created_at' => $this->created_at->todateTimeString(),
             'updated_at' => $this->updated_at->todateTimeString(),
         ];

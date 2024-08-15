@@ -118,9 +118,6 @@ const ClientList = () => {
                 <thead>
                   <tr>
                     <th>
-                      <strong>ID</strong>
-                    </th>
-                    <th>
                       <strong>Client Name</strong>
                     </th>
                     <th>
@@ -141,9 +138,6 @@ const ClientList = () => {
                 <tbody>
                   {clients.map((client) => (
                     <tr key={client.id}>
-                      <td>
-                        <strong>{client.id}</strong>
-                      </td>
                       <td>
                         <div className="d-flex align-items-center">
                           <img

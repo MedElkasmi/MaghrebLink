@@ -143,9 +143,6 @@ const Sidebar = () => {
                 <Link to="/admin/shipments">List</Link>
               </li>
               <li>
-                <Link to="/admin/shipments/store">Add</Link>
-              </li>
-              <li>
                 <Link to="/admin/shipments/removed">Archive</Link>
               </li>
             </ul>

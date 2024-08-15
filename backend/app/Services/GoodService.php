@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class GoodService
 {
     protected $cacheKey = 'goods';
-    protected $defaultPricePerUnitWeight = 25.0; // MAD
+    protected $defaultPricePerUnitWeight = 20.0; // MAD
 
     protected function getCacheKey(array $filters): string
     {
@@ -30,8 +30,8 @@ class GoodService
             $query = Goods::with(['shipment', 'client', 'receiver']);
 
             if (isset($filters['search'])) {
-                $query->where('client_id', 'like', "%{$filters['search']}%")
-                    ->orWhere('receiver_id', 'like', "%{$filters['search']}%");
+                $query->where('status', 'like', "%{$filters['search']}%")
+                    ->orWhere('shipment_id', 'like', "%{$filters['search']}%");
             }
       
 

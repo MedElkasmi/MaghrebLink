@@ -23,11 +23,12 @@ class GoodsRequest extends FormRequest
     {
         return [
 
-            'shipment_id' => 'required|exists:shipments,id',
+            'shipment_id' => 'nullable',
             'client_id' => 'required|exists:clients,id',
             'receiver_id' => 'required|exists:clients,id',
             'weight' => 'required|numeric',
             'storage_location' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
         ];
     }
 }

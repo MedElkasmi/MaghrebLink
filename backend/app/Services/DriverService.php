@@ -49,4 +49,10 @@ class DriverService
 
         return $totalWeight;
     }
+
+    public function searchDrivers(array $query)
+    {
+        $drivers = Driver::where('fullname', 'like', "%{$query['search']}%")->get();
+        return $drivers;
+    }
 }

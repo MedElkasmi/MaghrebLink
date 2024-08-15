@@ -1,178 +1,135 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import axiosInstance from '../../axiosConfig';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import axiosInstance from '../../axiosConfig'
+import { toast } from 'react-toastify'
+import Select from 'react-select'
 
 const ShipmentForm = () => {
-    const [drivers, setDrivers] = useState([]);
-    const [driverId, setDriverId] = useState('');
-    const [driverSearchQuery, setDriverSearchQuery] = useState('');
-    const [origin, setOrigin] = useState('');
-    const [destination, setDestination] = useState('');
-    const [shipmentDate, setShipmentDate] = useState('');
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
-    const { id } = useParams();
+  const [drivers, setDrivers] = useState([])
+  const [driverId, setDriverId] = useState('')
+  const [driverSearchQuery, setDriverSearchQuery] = useState('')
+  const [shipmentDate, setShipmentDate] = useState('')
+  const [error, setError] = useState(null)
+  const navigate = useNavigate()
+  const { id } = useParams()
 
-    useEffect(() => {
-        if (id) {
-            const fetchShipment = async () => {
-                try {
-                    const response = await axiosInstance.get(`/shipments/${id}`);
-                    const shipment = response.data;
-                    setDriverId(shipment.driver_id);
-                    setOrigin(shipment.origin);
-                    setDestination(shipment.destination);
-                    setShipmentDate(shipment.shipment_date);
-                } catch (error) {
-                    console.error('Error fetching shipment:', error);
-                }
-            };
-            fetchShipment();
-        }
-    }, [id]);
+  useEffect(() => {
+    const fetchDrivers = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/drivers/search?query=${driverSearchQuery}`
+        )
 
-    useEffect(() => {
-        const fetchDrivers = async () => {
-            try {
-                const response = await axiosInstance.get(`/drivers/search?query=${driverSearchQuery}`);
-                setDrivers(response.data);
-            } catch (error) {
-                console.error('Error fetching drivers:', error);
-            }
-        };
-        if (driverSearchQuery) {
-            fetchDrivers();
-        } else {
-            setDrivers([]);
-        }
-    }, [driverSearchQuery]);
+        const options = response.data.map((driver) => ({
+          value: driver.id,
+          label: `${driver.fullname} | (${driver.status})`,
+        }))
+        setDrivers(options)
+      } catch (error) {
+        console.error('Error fetching drivers:', error)
+      }
+    }
+    if (driverSearchQuery) {
+      fetchDrivers()
+    }
+  }, [driverSearchQuery])
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const shipmentData = {
-                driver_id: driverId,
-                origin,
-                destination,
-                shipment_date: shipmentDate,
-            };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const shipmentData = {
+        driver_id: driverId,
+        shipment_date: shipmentDate,
+        status: 'Pending',
+      }
 
-            if (id) {
-                await axiosInstance.put(`/shipments/${id}`, shipmentData);
-                toast.success('Shipment updated successfully!');
-                navigate('/admin/shipments');
-            } else {
-                await axiosInstance.post('/shipments', shipmentData);
-                toast.success('Shipment added successfully!');
-                navigate('/admin/shipments');
-            }
-        } catch (err) {
-            console.error('Error saving shipment:', err);
-            setError('Error saving shipment');
-            toast.error('Error saving shipment');
-        }
-    };
+      if (id) {
+        await axiosInstance.put(`/shipments/${id}`, shipmentData)
+        toast.success('Shipment updated successfully!')
+        navigate('/admin/shipments')
+      } else {
+        await axiosInstance.post('/shipments', shipmentData)
+        toast.success('Shipment added successfully!')
+        navigate('/admin/shipments')
+      }
+    } catch (err) {
+      console.error('Error saving shipment:', err)
+      setError('Error saving shipment')
+      toast.error('Error saving shipment')
+    }
+  }
 
-    return (
-        <div className="card">
-            <div className="card-header">
-                <h4 className="card-title">{id ? 'Edit Shipment' : 'Add Shipment'}</h4>
+  return (
+    <div
+      className="offcanvas offcanvas-end customeoff"
+      tabIndex={-1}
+      id="offcanvasExample"
+    >
+      <div className="offcanvas-header">
+        <h5 className="modal-title" id="#gridSystemModal">
+          Schedule Shipment
+        </h5>
+        <button
+          type="button"
+          className="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        >
+          <i className="fa-solid fa-xmark" />
+        </button>
+      </div>
+      <div className="offcanvas-body">
+        <div className="container-fluid">
+          <form onSubmit={handleSubmit}>
+            <div className="row">
+              <div className="col-xl-6 mb-3">
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
+                  Shipment Date <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder="Shipment Date"
+                  value={shipmentDate}
+                  onChange={(e) => setShipmentDate(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="col-xl-6 mb-3">
+                <label className="form-label">
+                  Driver<span className="text-danger">*</span>
+                </label>
+                <Select
+                  id="driver"
+                  options={drivers}
+                  value={
+                    drivers.find((driver) => driver.value === driverId) || null
+                  }
+                  onInputChange={(value) => setDriverSearchQuery(value)}
+                  onChange={(selected) =>
+                    setDriverId(selected ? selected.value : '')
+                  }
+                  placeholder="Search for drivers..."
+                  isClearable
+                  required
+                />
+                <div className="invalid-feedback">Please select a Driver.</div>
+              </div>
             </div>
-            <div className="card-body">
-                <div className="form-validation">
-                    <form className="needs-validation" onSubmit={handleSubmit}>
-                        <div className="row">
-                            <div className="col-xl-12">
-                                <div className="mb-3 row">
-                                    <label className="col-lg-4 col-form-label" htmlFor="driver">
-                                        Driver
-                                        <span className="text-danger">*</span>
-                                    </label>
-                                    <div className="col-lg-6">
-                                        <input
-                                            className="form-control"
-                                            id="driver"
-                                            type="text"
-                                            value={driverSearchQuery}
-                                            onChange={(e) => setDriverSearchQuery(e.target.value)}
-                                            placeholder="Search for drivers..."
-                                            required
-                                        />
-                                        <ul className="list-group">
-                                            {drivers.map((driver) => (
-                                                <li
-                                                    key={driver.id}
-                                                    className="list-group-item list-group-item-action"
-                                                    onClick={() => setDriverId(driver.id)}
-                                                >
-                                                    {driver.name}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        <div className="invalid-feedback">Please select a driver.</div>
-                                    </div>
-                                </div>
-                                <div className="mb-3 row">
-                                    <label className="col-lg-4 col-form-label" htmlFor="origin">
-                                        Origin
-                                        <span className="text-danger">*</span>
-                                    </label>
-                                    <div className="col-lg-6">
-                                        <input
-                                            className="form-control"
-                                            id="origin"
-                                            type="text"
-                                            value={origin}
-                                            onChange={(e) => setOrigin(e.target.value)}
-                                            required
-                                        />
-                                        <div className="invalid-feedback">Please enter the origin.</div>
-                                    </div>
-                                </div>
-                                <div className="mb-3 row">
-                                    <label className="col-lg-4 col-form-label" htmlFor="destination">
-                                        Destination
-                                        <span className="text-danger">*</span>
-                                    </label>
-                                    <div className="col-lg-6">
-                                        <input
-                                            className="form-control"
-                                            id="destination"
-                                            type="text"
-                                            value={destination}
-                                            onChange={(e) => setDestination(e.target.value)}
-                                            required
-                                        />
-                                        <div className="invalid-feedback">Please enter the destination.</div>
-                                    </div>
-                                </div>
-                                <div className="mb-3 row">
-                                    <label className="col-lg-4 col-form-label" htmlFor="shipmentDate">
-                                        Shipment Date
-                                        <span className="text-danger">*</span>
-                                    </label>
-                                    <div className="col-lg-6">
-                                        <input
-                                            className="form-control"
-                                            id="shipmentDate"
-                                            type="date"
-                                            value={shipmentDate}
-                                            onChange={(e) => setShipmentDate(e.target.value)}
-                                            required
-                                        />
-                                        <div className="invalid-feedback">Please enter the shipment date.</div>
-                                    </div>
-                                </div>
-                                {error && <p>{error}</p>}
-                                <button type="submit" className="btn light btn-primary">{id ? 'Update' : 'Create'}</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div>
+              <button className="btn btn-primary me-1" type="submit">
+                Submit
+              </button>
             </div>
+          </form>
         </div>
-    );
-};
+      </div>
+    </div>
+  )
+}
 
-export default ShipmentForm;
+export default ShipmentForm

@@ -113,11 +113,11 @@ class ClientService
         return Client::count();
     }
 
-    public function searchClients(Request $request)
-    {
-        $query = $request->input('query');
-        $clients = Client::where('fullname', 'like', "%{$query}%")->get();
+    // public function searchClients(Request $request)
+    // {
+    //     $query = $request->input('query');
+    //     $clients = Client::where('fullname', 'like', "%{$query}%")->get();
 
-        return response()->json($clients);
-    }
+    //     return response()->json($clients);
+    // }
 }

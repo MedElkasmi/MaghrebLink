@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('goods', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('shipment_id');
+            $table->unsignedBigInteger('shipment_id')->nullable();
             $table->string('product_code', 100)->nullable();
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('receiver_id');
-            $table->string('category', 100)->nullable();
-            $table->integer('quantity')->nullable();
             $table->string('weight', 50)->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->string('storage_location', 100)->nullable();
-            $table->text('description')->nullable();
+            $table->string('status')->enum(['unshipped', 'shipped']);
             $table->string('qr_code')->nullable(); 
             $table->timestamps();
+            $table->softDeletes();
 
+    
             $table->foreign('shipment_id')->references('id')->on('shipments')->onDelete('cascade');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->foreign('receiver_id')->references('id')->on('clients')->onDelete('cascade');

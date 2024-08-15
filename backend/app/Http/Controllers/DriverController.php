@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use App\Services\DriverService;
 use App\Http\Resources\DriverResource;
 use App\Http\Requests\DriverRequest;
-
+use App\Models\Shipment;
 
 class DriverController extends Controller
 {
@@ -68,6 +68,15 @@ class DriverController extends Controller
     {   
         $weight = $this->driverService->getTotalGoodsWeight($driverId);
         return response()->json(['total_weight' => $weight]);
+    }
+
+    public function search(Request $request) : JsonResponse
+    {
+        //
+        $query = $request->input('query');
+        $drivers = Driver::where('fullname', 'like', "%{$query}%")->get();
+
+        return response()->json($drivers);
     }
 
 }
