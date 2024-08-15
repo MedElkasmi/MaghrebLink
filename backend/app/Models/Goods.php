@@ -20,6 +20,7 @@ class Goods extends Model
         'weight',
         'price',	
         'storage_location',
+        'status',
         'qr_code'
     ];
 

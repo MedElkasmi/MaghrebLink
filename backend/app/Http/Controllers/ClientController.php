@@ -68,9 +68,9 @@ class ClientController extends Controller
         return response()->json(['message' => 'Client permanently deleted successfully']);
     }
 
-    public function getRemoved(): JsonResponse
+    public function getRemoved(Request $request): JsonResponse
     {
-        $clients = $this->clientService->getRemovedClients();
+        $clients = $this->clientService->getRemovedClients($request->all());
         return response()->json([
             'data' => ClientResource::collection($clients),
             'meta' => [
@@ -90,12 +90,6 @@ class ClientController extends Controller
 
     public function search(Request $request)
     {
-        // return Client::where('fullname', 'like', "%{$search}%")
-        // ->orWhere('whatsapp', 'like', "%{$search}%")
-        // ->orWhere('country', 'like', "%{$search}%")
-        // ->orWhere('city', 'like', "%{$search}%")
-        // ->orWhere('address', 'like', "%{$search}%")
-        // ->paginate(10);
 
         $query = $request->input('query');
         $clients = Client::where('fullname', 'like', "%{$query}%")->get();

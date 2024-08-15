@@ -17,8 +17,10 @@ class ShipmentResource extends JsonResource
         return [
             'id' => $this->id,
             'tracking_number' => $this->tracking_number,
-            'origin' => $this->origin,
-            'destination' => $this->destination,
+            'driver_id' => new DriverResource($this->whenLoaded('driver')),
+            'shipment_date' => $this->shipment_date,
+            'arrived_date' => $this->arrived_date,
+            'status' => $this->status,
             'created_at' => $this->created_at->todateTimeString(),
             'updated_at' => $this->updated_at->todateTimeString(),
         ];

@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
 
             $table->id();
-            $table->string('fullname');
-            $table->string('whatsapp');
-            $table->string('country');
+            $table->string('fullname')->unique();
+            $table->string('whatsapp')->unique();
+            $table->string('country')->enum(['Morocco','Spain']);
             $table->string('city');
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

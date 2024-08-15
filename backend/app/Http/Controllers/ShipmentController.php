@@ -2,141 +2,99 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ShipmentRequest;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use Illuminate\http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+use App\Services\ShipmentService;
+use App\Http\Resources\ShipmentResource;
 
 
 
 class ShipmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-        $query = Shipment::query();
-        $shipment = $query->paginate(10);
 
-        return response()->json($shipment);
+    protected $shipmentService;
+
+    public function __construct(ShipmentService $shipmentService)
+    {
+        $this->shipmentService = $shipmentService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request) : JsonResponse
     {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-        $request->validate([
-            'origin' => 'required',
-            'destination' => 'required',
-            'shipment_date'=> 'required',
+        $shipments = $this->shipmentService->getShipments($request->all());
+        return response()->json([
+            'data' => ShipmentResource::collection($shipments),
+            'meta' => [
+                'current_page' => $shipments->currentPage(),
+                'last_page' => $shipments->lastPage(),
+                'per_page' => $shipments->perPage(),
+                'total' => $shipments->total(),
+            ]
         ]);
-
-        $shipments = Shipment::create($request->all());
-
-        return response()->json($shipments, 201);
+        
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function store(ShipmentRequest $request) : JsonResponse
+    {
+        $shipment = $this->shipmentService->createShipment($request->validated());
+        return response()->json(new ShipmentResource($shipment), 201);
+    }
+
     public function show($id)
     {
-        //
-
-        // $shipment = Shipment::where('tracking_number', $id)->first();
-
-        // if ($shipment) {
-        //     return response()->json($shipment);
-        // } else {
-        //     return response()->json(['error' => 'Shipment not found'], 404);
-        // }
-
-        $shipment = Shipment::findOrFail($id);
+        $shipment = $this->shipmentService->getShipmentById($id);
         return response()->json($shipment);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Shipment $shipment)
+    public function update(ShipmentRequest $request, $id)
     {
-        //
-
+        $shipment = $this->shipmentService->updateShipment($id, $request->all());
+        return response()->json(new ShipmentResource($shipment));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request,$id)
-    {
-        
-        $request->validate([
-            'origin' => 'required',
-            'destination' => 'required',
-            'shipment_date'=> 'required',
-        ]);
-
-        $shipment = Shipment::findOrFail($id);
-        $shipment->update($request->all());
-
-        return response()->json($shipment, 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
-        //
-        $shipment = Shipment::findOrFail($id);
-        $shipment->delete();
-
-        return response()->json(['message' => 'Client deleted successfully']);
+        $this->shipmentService->deleteShipment($id);
+        return response()->json(['message' => 'Shipment deleted successfully']);
     }
 
-    public function search(Request $request)
+    public function search(ShipmentRequest $request) : JsonResponse
     {
-        $query = $request->input('query');
-        $shipments = Shipment::where('tracking_number', 'like', "%{$query}%")->get();
-
-        return response()->json($shipments);
+        $shipments = $this->shipmentService->searchShipment($request->validated());
+        return response()->json([
+            'data' => ShipmentResource::collection($shipments),
+            'meta' => [
+                'current_page' => $shipments->currentPage(),
+                'last_page' => $shipments->lastPage(),
+                'per_page' => $shipments->perPage(),
+            ]
+        ]);
     }
 
     public function getRemoved(): JsonResponse
     {
-        $shipments = Shipment::onlyTrashed()->paginate(10);
+        $shipments = Shipment::onlyTrashed()->get();
         return response()->json($shipments);
     }
 
     public function restore($id) 
     {
-        $shipment = Shipment::withTrashed()->find($id);
-        $shipment->restore();
-
-        return response()->json(['message' => 'Shipment restored successfully']);
+        $shipment = $this->shipmentService->restoreShipment($id);
+        return response()->json(new ShipmentResource($shipment));
     }
 
     public function forceDelete($id)
     {
-        $shipment = Shipment::withTrashed()->findOrFail($id);
-        $shipment->forceDelete();
-        return response()->json(['message' => 'Shipment permanently deleted successfully']);
+        $shipment = $this->shipmentService->forceDeleteShipment($id);
+        return response()->json(new ShipmentResource($shipment));
     }
 
     public function totalShipments() {
 
-        $total = Shipment::count();
+        $total = $this->shipmentService->getTotalShipments();
         return response()->json(['total' => $total]);
     }
 

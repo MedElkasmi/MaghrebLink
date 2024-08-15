@@ -10,12 +10,9 @@ class Driver extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'age',
-        'phone',
-        'license',
-        'picture',
-        'status',
+        'fullname',
+        'whatsapp',
+        'status'
     ];
 
     public function shipments() {

@@ -18,8 +18,6 @@ class Shipment extends Model
     protected $fillable = [
         'tracking_number',
         'driver_id',
-        'origin',
-        'destination',
         'shipment_date',
         'arrived_date ',
         'status',

@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "apexcharts": "^3.50.0",
+    "apexcharts": "^3.52.0",
     "axios": "^1.7.2",
     "leaflet": "^1.9.4",
     "papaparse": "^5.4.1",

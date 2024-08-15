@@ -4,11 +4,13 @@ namespace App\Services;
 
 use App\Models\Goods;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class GoodService
 {
     protected $cacheKey = 'goods';
+    protected $defaultPricePerUnitWeight = 20.0; // MAD
 
     protected function getCacheKey(array $filters): string
     {
@@ -24,12 +26,14 @@ class GoodService
     {
         $cacheKey = $this->getCacheKey($filters);
 
-        return Cache::remember($cacheKey, 600, function () use ($filters) {
+        return Cache::remember($cacheKey, 30, function () use ($filters) {
             $query = Goods::with(['shipment', 'client', 'receiver']);
 
             if (isset($filters['search'])) {
-                $query->where('description', 'like', "%{$filters['search']}%");
+                $query->where('status', 'like', "%{$filters['search']}%")
+                    ->orWhere('shipment_id', 'like', "%{$filters['search']}%");
             }
+      
 
             return $query->paginate(10);
         });
@@ -37,6 +41,11 @@ class GoodService
 
     public function createGood(array $data)
     {
+
+        if(isset($data['weight'])) {
+            $data['price'] = $data['weight'] * $this->defaultPricePerUnitWeight;
+        }
+
         $good = Goods::create($data);
         $this->clearCache();
         return $good;
@@ -82,10 +91,19 @@ class GoodService
         Cache::forget("good:{$id}");
     }
 
-    public function getRemoved()
+    public function getRemoved(array $filters)
     {
-        return Goods::onlyTrashed()->with(['shipment', 'client', 'receiver'])->paginate(10);
+        $query = Goods::onlyTrashed()->with(['shipment', 'client', 'receiver']);
+        if (isset($filters['search'])) {
+            $query->whereHas('client', function($q) use ($filters) {
+                $q->where('fullname', 'like', "%{$filters['search']}%");
+            })->orWhereHas('receiver', function($q) use ($filters) {
+                $q->where('fullname', 'like', "%{$filters['search']}%");
+            });
+        }
+        return $query->paginate(10);
     }
+    
 
     public function getTotalGoods(): int
     {
@@ -95,5 +113,44 @@ class GoodService
     public function getTotalWeight(): float
     {
         return Goods::sum('weight');
+    }
+
+    public function getTotalPrice(): array
+    {
+        $currentYear = Carbon::now()->year;
+
+        // Grouping by month and summing prices
+        $monthlyTotals = Goods::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('SUM(price) as total')
+            )
+            ->whereYear('created_at', $currentYear) // Filter for the current year
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        $labels = [];
+        $data = [];
+
+        // Initialize all months with 0
+        for ($month = 1; $month <= 12; $month++) {
+            $labels[] = Carbon::createFromDate(null, $month, 1)->format('F');
+            $data[] = 0; // Default value for each month
+        }
+
+        // Populate the data array with the actual totals
+        foreach ($monthlyTotals as $total) {
+            $data[$total->month - 1] = $total->total;
+        }
+
+        return [
+            'labels' => $labels,
+            'series' => [
+                [
+                    'name' => 'Total Price',
+                    'data' => $data
+                ]
+            ]
+        ];
     }
 }

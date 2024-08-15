@@ -4,9 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Select from 'react-select'
 
-const GoodsForm = () => {
+const GoodsForm = ({ onAddGood }) => {
   const [shipments, setShipments] = useState([])
-  const [clients, setClients] = useState([])
+  const [senderClients, setSenderClients] = useState([])
+  const [receiverClients, setReceiverClients] = useState([])
   const [shipmentId, setShipmentId] = useState('')
   const [senderClientId, setSenderClientId] = useState('')
   const [receiverClientId, setReceiverClientId] = useState('')
@@ -38,23 +39,23 @@ const GoodsForm = () => {
     }
   }, [goodId])
 
-  useEffect(() => {
-    const fetchShipments = async () => {
-      try {
-        const response = await axiosInstance.get(`/shipments/search`, {
-          params: { query: searchShipmentQuery },
-        })
-        const options = response.data.map((shipment) => ({
-          value: shipment.id,
-          label: `${shipment.origin} to ${shipment.destination}`,
-        }))
-        setShipments(options)
-      } catch (error) {
-        console.error('Error fetching shipments:', error)
-      }
-    }
-    fetchShipments()
-  }, [searchShipmentQuery])
+  // useEffect(() => {
+  //   const fetchShipments = async () => {
+  //     try {
+  //       const response = await axiosInstance.get(`/shipments/search`, {
+  //         params: { query: searchShipmentQuery },
+  //       })
+  //       const options = response.data.map((shipment) => ({
+  //         value: shipment.id,
+  //         label: `${shipment.origin} to ${shipment.destination}`,
+  //       }))
+  //       setShipments(options)
+  //     } catch (error) {
+  //       console.error('Error fetching shipments:', error)
+  //     }
+  //   }
+  //   fetchShipments()
+  // }, [searchShipmentQuery])
 
   useEffect(() => {
     const fetchClients = async (query, setClientsFunction) => {
@@ -73,11 +74,11 @@ const GoodsForm = () => {
     }
 
     if (searchSenderClientQuery) {
-      fetchClients(searchSenderClientQuery, setClients)
+      fetchClients(searchSenderClientQuery, setSenderClients)
     }
 
     if (searchReceiverClientQuery) {
-      fetchClients(searchReceiverClientQuery, setClients)
+      fetchClients(searchReceiverClientQuery, setReceiverClients)
     }
   }, [searchSenderClientQuery, searchReceiverClientQuery])
 
@@ -85,20 +86,35 @@ const GoodsForm = () => {
     e.preventDefault()
     try {
       const goodData = {
-        shipment_id: shipmentId,
+        shipment_id: null,
         client_id: senderClientId,
         receiver_id: receiverClientId,
         weight,
         storage_location: storageLocation,
+        status: 'unshipped',
       }
 
+      let newGood
       if (goodId) {
+        // Update existing good
         await axiosInstance.put(`/goods/${goodId}`, goodData)
         toast.success('Good updated successfully!')
+        // Fetch the updated good from the backend
+        const response = await axiosInstance.get(`/goods/${goodId}`)
+        newGood = response.data
       } else {
-        await axiosInstance.post('/goods/store', goodData)
+        // Create new good
+        const response = await axiosInstance.post('/goods/store', goodData)
         toast.success('Good added successfully!')
+        // Fetch the newly created good from the backend
+        newGood = response.data
       }
+
+      // Pass the new or updated good to the parent component
+      if (onAddGood) {
+        onAddGood(newGood)
+      }
+
       navigate('/admin/goods')
     } catch (err) {
       console.error('Error saving good:', err)
@@ -136,10 +152,11 @@ const GoodsForm = () => {
                 </label>
                 <Select
                   id="senderClient"
-                  options={clients}
+                  options={senderClients}
                   value={
-                    clients.find((client) => client.value === senderClientId) ||
-                    null
+                    senderClients.find(
+                      (senderClients) => senderClients.value === senderClientId
+                    ) || null
                   }
                   onInputChange={setSearchSenderClientQuery}
                   onChange={(selected) =>
@@ -160,10 +177,11 @@ const GoodsForm = () => {
                 </label>
                 <Select
                   id="receiverClient"
-                  options={clients}
+                  options={receiverClients || []}
                   value={
-                    clients.find(
-                      (client) => client.value === receiverClientId
+                    receiverClients.find(
+                      (receiverClients) =>
+                        receiverClients.value === receiverClientId
                     ) || null
                   }
                   onInputChange={setSearchReceiverClientQuery}
@@ -178,7 +196,7 @@ const GoodsForm = () => {
                   Please select a receiver client.
                 </div>
               </div>
-
+              {/* 
               <div className="col-xl-6 mb-3">
                 <label className="form-label">
                   Shipment<span className="text-danger">*</span>
@@ -202,7 +220,7 @@ const GoodsForm = () => {
                 <div className="invalid-feedback">
                   Please select a shipment.
                 </div>
-              </div>
+              </div> */}
 
               <div className="col-xl-6 mb-3">
                 <label htmlFor="weight" className="form-label">

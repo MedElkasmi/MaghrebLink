@@ -18,9 +18,22 @@ const GoodsList = () => {
     setSearchQuery,
   } = useContext(GlobalStateContext)
 
-  const { loading, totalPages } = useGoods(currentPage, searchQuery)
+  const { totalPages } = useGoods(currentPage, searchQuery)
   const handlePageChange = (page) => {
     setCurrentPage(page)
+  }
+
+  const handleAddGood = async (newGood) => {
+    try {
+      // Fetch the specific newly added good
+      const response = await axiosInstance.get(`/goods/${newGood.id}`)
+      const fetchedGood = response.data
+
+      // Update the state with the new good at the top of the list
+      setGoods((prevGoods) => [fetchedGood, ...prevGoods])
+    } catch (error) {
+      console.error('Error fetching the new good:', error)
+    }
   }
 
   const handleSearchChange = (e) => {
@@ -41,22 +54,29 @@ const GoodsList = () => {
   const exportToCSV = () => {
     const csvData = goods.map((good) => ({
       id: good.id,
-      product_code: good.product_code,
-      weight: good.weight,
-      category: good.category,
-      price: good.price,
-      storage_location: good.storage_location,
-      status: good.status,
       shipment_tracking_number: good.shipment
         ? good.shipment.tracking_number
         : 'N/A',
+      product_code: good.product_code,
+      client_id: good.client_id,
+      receiver_client_id: good.receiver_client_id,
+      weight: good.weight,
+      price: good.price,
+      storage_location: good.storage_location,
     }))
 
     return csvData
   }
 
-  if (loading) {
-    return <p>Loading...</p>
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'shipped':
+        return <span className="badge light badge-success">shipped</span>
+      case 'unshipped':
+        return <span className="badge light badge-warning">unshipped</span>
+      default:
+        return <span>{status}</span>
+    }
   }
 
   return (
@@ -109,9 +129,6 @@ const GoodsList = () => {
                   <thead>
                     <tr>
                       <th>
-                        <strong>ID</strong>
-                      </th>
-                      <th>
                         <strong>Shipment Reference</strong>
                       </th>
                       <th>
@@ -124,13 +141,16 @@ const GoodsList = () => {
                         <strong>Client Receiver</strong>
                       </th>
                       <th>
-                        <strong>Weight</strong>
+                        <strong>Weight (KG)</strong>
                       </th>
                       <th>
-                        <strong>Price</strong>
+                        <strong>Price (MAD)</strong>
                       </th>
                       <th>
                         <strong>Storage Location</strong>
+                      </th>
+                      <th>
+                        <strong>Status</strong>
                       </th>
                       <th>
                         <strong>Storage Date</strong>
@@ -143,9 +163,6 @@ const GoodsList = () => {
                   <tbody>
                     {goods.map((good) => (
                       <tr key={good.id}>
-                        <td>
-                          <strong>{good.id}</strong>
-                        </td>
                         <td>
                           <div className="d-flex align-items-center">
                             <span className="w-space-no">
@@ -160,9 +177,10 @@ const GoodsList = () => {
                         <td>
                           {good.receiver ? good.receiver.fullname : 'N/A'}
                         </td>
-                        <td>{good.weight} KG</td>
+                        <td>{good.weight}</td>
                         <td>{good.price}</td>
                         <td>{good.storage_location}</td>
+                        <td>{getStatusBadge(good.status)}</td>
                         <td>
                           {new Date(good.created_at).toLocaleDateString()}
                         </td>
@@ -196,7 +214,7 @@ const GoodsList = () => {
             </div>
           </div>
         </div>
-        <GoodsForm />
+        <GoodsForm onAddGood={handleAddGood} />
       </div>
     </div>
   )

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
-            $table->string('fullname');
-            $table->string('whatsapp');
-            $table->string('status');
+            $table->string('fullname')->unique();
+            $table->string('whatsapp')->unique();
+            $table->string('status')->enum(['Available', 'Not Available']);
             $table->timestamps();
         });
     }

@@ -90,9 +90,22 @@ class ClientService
         $client->forceDelete();
     }
 
-    public function getRemovedClients()
+    public function getRemovedClients(array $filters)
     {
-        return Client::onlyTrashed()->paginate(10);
+        $cacheKey = $this->getCacheKey($filters);
+
+        
+            $query = Client::onlyTrashed();
+            if (isset($filters['search'])) {
+                $query->where('fullname', 'like', "%{$filters['search']}%")
+                ->orWhere('whatsapp', 'like', "%{$filters['search']}%")
+                ->orWhere('country', 'like', "%{$filters['search']}%")
+                ->orWhere('city', 'like', "%{$filters['search']}%")
+                ->orWhere('address', 'like', "%{$filters['search']}%");    
+            }
+            return $query->paginate(10);
+        
+
     }
 
     public function countClients(): int
@@ -100,11 +113,11 @@ class ClientService
         return Client::count();
     }
 
-    public function searchClients(Request $request)
-    {
-        $query = $request->input('query');
-        $clients = Client::where('fullname', 'like', "%{$query}%")->get();
+    // public function searchClients(Request $request)
+    // {
+    //     $query = $request->input('query');
+    //     $clients = Client::where('fullname', 'like', "%{$query}%")->get();
 
-        return response()->json($clients);
-    }
+    //     return response()->json($clients);
+    // }
 }

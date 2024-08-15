@@ -21,11 +21,9 @@ class ShipmentFactory extends Factory
             //
             'tracking_number' => $this->faker->unique()->regexify('SHIP[0-9A-Z]{10}'),
             'driver_id' => Driver::factory(),
-            'origin' => $this->faker->city,
-            'destination' => $this->faker->city,
             'shipment_date' => $this->faker->date(),
             'arrived_date' => $this->faker->date(),
-            'status' => $this->faker->randomElement(['Active', 'Arrived', 'Cancelled','Pending']),
+            'status' => $this->faker->randomElement(['In-transit', 'Arrived']),
         ];
     }
 }
