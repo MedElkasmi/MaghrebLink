@@ -23,8 +23,9 @@ class ShipmentRequest extends FormRequest
     {
         return [
             'driver_id' => 'required|exists:drivers,id',
-            'shipment_date'=> 'required',
-            'status' => 'required',
+            'shipment_date'=> 'date',
+            'arrived_date'=> 'date',
+            'status' => 'required|string',
         ];
     }
 }

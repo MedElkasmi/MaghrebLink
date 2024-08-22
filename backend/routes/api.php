@@ -30,7 +30,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::middleware(['auth:sanctum'])->group(function () {
 
     // Client Routes
-    Route::middleware(['role:Admin'])->group(function () {
+    Route::middleware([])->group(function () {
 
         Route::prefix('/clients')->group(function () {
             Route::post('/add', [ClientController::class, 'store']);
@@ -61,13 +61,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
         // Shipment Routes
         Route::prefix('shipments')->group(function () {
+            Route::get('/active',[ShipmentController::class, 'active']);
+            Route::put('/finish/{id}',[ShipmentController::class, 'finished']);
             Route::get('/search', [ShipmentController::class, 'search']);
             Route::get('/', [ShipmentController::class, 'index']);
             Route::get('/removed', [ShipmentController::class, 'getRemoved']);
             Route::get('/total', [ShipmentController::class, 'totalShipments']);
             Route::get('/overview', [ShipmentController::class, 'overview']);
             Route::get('/qr/{qrCode}', [ShipmentController::class, 'getShipmentByQrCode']);
-            Route::post('/', [ShipmentController::class, 'store']);
+            Route::post('/store', [ShipmentController::class, 'store']);
             Route::get('/{id}', [ShipmentController::class, 'show']);
             Route::put('/{id}', [ShipmentController::class, 'update']);
             Route::delete('/{id}', [ShipmentController::class, 'destroy']);
@@ -75,6 +77,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::delete('/{id}/force-delete', [ShipmentController::class, 'forceDelete']);
             Route::get('/{id}/delivered-shipments-count', [ShipmentController::class, 'getDeliveredShipmentsCount']);
             Route::get('/{id}/pending', [ShipmentController::class, 'getPendingShipments']);
+
         });
         // Driver Routes
         Route::prefix('drivers')->group(function () {

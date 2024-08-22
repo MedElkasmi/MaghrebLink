@@ -182,21 +182,6 @@ class ShipmentController extends Controller
         return response()->json($data);
     }
 
-    public function getDeliveredShipmentsCount($driverId)
-    {
-        $count = Shipment::where('driver_id', $driverId)
-                        ->count();
-        return response()->json(['delivered_count' => $count]);
-    }
-
-    public function getPendingShipments($driverId) {
-
-        $count = Shipment::where('driver_id', $driverId)
-                            ->where('status', 'Pending')
-                            ->count();
-        return response()->json($count);
-    }
-
     public function getShipmentByQrCode($qrCode)
     {
         $shipment = Shipment::where('qr_code', $qrCode)->first();
@@ -206,6 +191,18 @@ class ShipmentController extends Controller
         }
 
         return response()->json($shipment);
+    }
+
+    public function active()
+    {
+        $shipments = $this->shipmentService->getActiveShipments();
+        return response()->json($shipments);
+    }
+
+    public function finished(ShipmentRequest $request, $id)
+    {
+        $shipments = $this->shipmentService->CompletedShipments($id, $request->validated());
+        return response()->json($shipments);
     }
 
 

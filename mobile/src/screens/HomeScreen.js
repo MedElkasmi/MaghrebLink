@@ -1,44 +1,58 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import DeliveredShipmentsWidget from '../components/DeliveredShipmentsWidget';
-import PendingShipmentsWidget from '../components/PendingShipmentsWidget';
-import TotalGoodsWeightWidget from '../components/TotalGoodsWeightWidget';
+import React from 'react'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import StartShipment from '../components/widgets/StartShipment'
 
 const HomeScreen = () => {
-  const driverId = 2; // Replace with the actual driver ID
-
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>MaghrebExpress</Text>
-      
-      <View style={styles.widgetContainer}>
-        <DeliveredShipmentsWidget driverId={driverId} />
-        <PendingShipmentsWidget driverId={driverId} />
-        <TotalGoodsWeightWidget driverId={driverId} />
-        <PendingShipmentsWidget driverId={driverId} />
+    <View style={styles.container}>
+      <View style={styles.centeredContainer}>
+        <Image
+          source={require('../assets/images/car_shipment.png')}
+          style={styles.image}
+        />
+        <Text style={styles.headerText}>Turn your location on</Text>
+        <Text style={styles.subText}>
+          Your location info is needed to track shipments and ensure accurate
+          delivery.
+        </Text>
+
+        <StartShipment />
       </View>
-    </ScrollView>
-  );
-};
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 20,
+    backgroundColor: '#f0f4f8',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  centeredContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+    paddingTop: 70,
+  },
+  image: {
+    width: 250,
+    height: 250,
     marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 22,
+    fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
+    marginBottom: 10,
   },
-  widgetContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+  subText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
   },
-});
+})
 
-export default HomeScreen;
+export default HomeScreen

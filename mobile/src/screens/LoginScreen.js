@@ -5,8 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from 'react-native'
-import axiosInstance from '../api/axiosConfig'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axiosInstance from '../services/axiosConfig'
 import { useNavigation } from '@react-navigation/native'
 
 const LoginScreen = () => {
@@ -20,7 +22,14 @@ const LoginScreen = () => {
         username,
         password,
       })
+
       if (response.status === 200) {
+        const { token } = response.data // Assuming the token is returned in response.data.token
+
+        // Store the token securely
+        await AsyncStorage.setItem('authToken', token)
+
+        // Navigate to the main app screen
         navigation.navigate('Drawer')
       } else {
         alert('Login failed')
@@ -33,7 +42,10 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>MaghrebLink Driver</Text>
+      <Image
+        source={require('../assets/images/bg_login.png')} // Replace with your logo path
+        style={styles.logo}
+      />
       <TextInput
         placeholder="Username"
         value={username}
@@ -50,9 +62,9 @@ const LoginScreen = () => {
         placeholderTextColor="#aaa"
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
-      <Text style={styles.footer}>Forgot your password?</Text>
+      <Text style={styles.footer}>Forgot Password?</Text>
     </View>
   )
 }
@@ -63,39 +75,47 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f7f8fa', // Light background color
+  },
+  logo: {
+    width: 300,
+    height: 300,
+    marginBottom: 20,
+
+    // Adjust these dimensions based on your logo size
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
+    color: '#333', // Darker text color for better readability
+    marginBottom: 30,
   },
   input: {
     width: '100%',
-    height: 40,
-    borderColor: '#ddd',
+    height: 50,
+    borderColor: '#ccc', // Subtle border color
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 25,
     marginBottom: 15,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    backgroundColor: '#fff', // White background for input fields
   },
   button: {
     width: '100%',
-    height: 40,
-    backgroundColor: '#007bff',
+    height: 50,
+    backgroundColor: '#2E91A4', // Blue color for the button
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 25,
     marginBottom: 15,
   },
   buttonText: {
-    color: '#fff',
+    color: '#fff', // White text for the button
+    fontSize: 18,
     fontWeight: 'bold',
   },
   footer: {
-    color: '#007bff',
+    color: '#4a90e2', // Matching the button color for the footer text
     marginTop: 15,
   },
 })
