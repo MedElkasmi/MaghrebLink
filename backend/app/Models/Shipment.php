@@ -24,9 +24,9 @@ class Shipment extends Model
         'qr_code'
     ];
 
-    protected $dispatchesEvents = [
-        'updated' => ShipmentStatusUpdated::class,
-    ];
+    // protected $dispatchesEvents = [
+    //     'updated' => ShipmentStatusUpdated::class,
+    // ];
 
     public function driver()
     {

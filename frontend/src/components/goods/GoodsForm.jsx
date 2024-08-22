@@ -39,24 +39,6 @@ const GoodsForm = ({ onAddGood }) => {
     }
   }, [goodId])
 
-  // useEffect(() => {
-  //   const fetchShipments = async () => {
-  //     try {
-  //       const response = await axiosInstance.get(`/shipments/search`, {
-  //         params: { query: searchShipmentQuery },
-  //       })
-  //       const options = response.data.map((shipment) => ({
-  //         value: shipment.id,
-  //         label: `${shipment.origin} to ${shipment.destination}`,
-  //       }))
-  //       setShipments(options)
-  //     } catch (error) {
-  //       console.error('Error fetching shipments:', error)
-  //     }
-  //   }
-  //   fetchShipments()
-  // }, [searchShipmentQuery])
-
   useEffect(() => {
     const fetchClients = async (query, setClientsFunction) => {
       try {
@@ -196,31 +178,6 @@ const GoodsForm = ({ onAddGood }) => {
                   Please select a receiver client.
                 </div>
               </div>
-              {/* 
-              <div className="col-xl-6 mb-3">
-                <label className="form-label">
-                  Shipment<span className="text-danger">*</span>
-                </label>
-                <Select
-                  id="shipment"
-                  options={shipments}
-                  value={
-                    shipments.find(
-                      (shipment) => shipment.value === shipmentId
-                    ) || null
-                  }
-                  onInputChange={setSearchShipmentQuery}
-                  onChange={(selected) =>
-                    setShipmentId(selected ? selected.value : '')
-                  }
-                  placeholder="Search for shipments..."
-                  isClearable
-                  required
-                />
-                <div className="invalid-feedback">
-                  Please select a shipment.
-                </div>
-              </div> */}
 
               <div className="col-xl-6 mb-3">
                 <label htmlFor="weight" className="form-label">

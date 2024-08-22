@@ -1,58 +1,77 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
-import { Ionicons } from '@expo/vector-icons';
+import React, { memo } from 'react'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
+import { Ionicons } from '@expo/vector-icons'
 
+// Extracted constant styles for color and sizes
+const COLORS = {
+  primary: '#4A90E2',
+  white: '#fff',
+  black: '#000',
+  lightGray: '#ddd',
+}
 
 const CustomDrawerContent = (props) => {
   const handleLogout = () => {
-    props.navigation.navigate('Login');
-  };
+    try {
+      props.navigation.navigate('Login')
+    } catch (error) {
+      console.error('Navigation error:', error)
+    }
+  }
 
   return (
     <DrawerContentScrollView {...props}>
-      <View style={styles.header}>
-        <Image source={require('../../src/assets/truck.png')} style={styles.logo} />
-        <Text style={styles.title}>MaghrebExpress</Text>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.drawerItemList}>
-        <DrawerItem
-          label="Home"
-          icon={({ color, size }) => (
-            <Ionicons name="home" size={20} color="#4A90E2" style={styles.icon} />
-          )}
-          onPress={() => props.navigation.navigate('Home')}
-        />
-        <DrawerItem
-          label="Shipments"
-          icon={({ color, size }) => (
-            <Ionicons name="boat-sharp" size={20} color="#4A90E2" style={styles.icon} />
-          )}
-          onPress={() => props.navigation.navigate('Shipments')}
-        />
-        <DrawerItem
-          label="Clients"
-          icon={({ color, size }) => (
-            <Ionicons name="person" size={20} color="#4A90E2" style={styles.icon} />
-          )}
-          onPress={() => props.navigation.navigate('New Client')}
-        />
-
-        <DrawerItem
-          label="Goods"
-          icon={({ color, size }) => (
-            <Ionicons name="list" size={20} color="#4A90E2" style={styles.icon} />
-          )}
-          onPress={() => props.navigation.navigate('Goods')}
-        />
-        {/* Add more drawer items as needed */}
-      </View>
+      <Header handleLogout={handleLogout} />
+      <DrawerMenuItems navigation={props.navigation} />
     </DrawerContentScrollView>
-  );
-};
+  )
+}
+
+// Separated Header as a sub-component for better readability and reusability
+const Header = ({ handleLogout }) => (
+  <View style={styles.header}>
+    <Image
+      source={require('../../src/assets/images/truck.png')}
+      style={styles.logo}
+    />
+    <Text style={styles.title}>User Name</Text>
+    <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+      <Text style={styles.logoutButtonText}>Logout</Text>
+    </TouchableOpacity>
+  </View>
+)
+
+// Separated Drawer Items into a sub-component
+const DrawerMenuItems = ({ navigation }) => (
+  <View style={styles.drawerItemList}>
+    <DrawerItem
+      label="Statistics"
+      icon={({ color, size }) => (
+        <Ionicons
+          name="person"
+          size={20}
+          color={COLORS.primary}
+          style={styles.icon}
+        />
+      )}
+      onPress={() => navigation.navigate('Dashboard')}
+    />
+
+    <DrawerItem
+      label="Settings"
+      icon={({ color, size }) => (
+        <Ionicons
+          name="person"
+          size={20}
+          color={COLORS.primary}
+          style={styles.icon}
+        />
+      )}
+      onPress={() => navigation.navigate('Dashboard')}
+    />
+  </View>
+)
 
 const styles = StyleSheet.create({
   header: {
@@ -60,10 +79,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#4A90E2', // Base color
+    backgroundColor: COLORS.primary,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    shadowColor: '#000',
+    borderBottomColor: COLORS.lightGray,
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -74,33 +93,33 @@ const styles = StyleSheet.create({
     height: 80,
     marginBottom: 10,
     borderRadius: 40,
-    backgroundColor: '#fff', // Adding a white background to make the logo stand out
+    backgroundColor: COLORS.white,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: COLORS.white,
     marginBottom: 10,
   },
   logoutButton: {
     marginTop: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 20,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5,
   },
   logoutButtonText: {
-    color: '#4A90E2',
+    color: COLORS.primary,
     fontWeight: 'bold',
   },
   drawerItemList: {
     marginTop: 20,
   },
-});
+})
 
-export default CustomDrawerContent;
+export default memo(CustomDrawerContent)

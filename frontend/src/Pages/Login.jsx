@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault() 
+    e.preventDefault()
     try {
       const response = await axiosInstance.post('/login', {
         username,
@@ -45,8 +45,17 @@ const Login = () => {
   }
 
   return (
-    <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f8f9fa' }}>
-      <div style={{ flex: '1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div
+      style={{ display: 'flex', height: '100vh', backgroundColor: '#f8f9fa' }}
+    >
+      <div
+        style={{
+          flex: '1',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <div style={{ maxWidth: '500px', width: '100%' }}>
           <div className="text-center">
             <h3 className="title">Sign In</h3>
@@ -100,7 +109,11 @@ const Login = () => {
               </div>
             </div>
             <div className="text-center mb-4">
-              <button type="submit" className="btn btn-success btn-block" onClick={handleSubmit}>
+              <button
+                type="submit"
+                className="btn btn-primary btn-block"
+                onClick={handleSubmit}
+              >
                 Sign In
               </button>
             </div>
@@ -115,12 +128,23 @@ const Login = () => {
               </button>
             </p>
           </form>
-        </div> 
+        </div>
       </div>
-      <div style={{ flex: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
+      <div
+        style={{
+          flex: '1',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fff',
+        }}
+      >
         <div style={{ textAlign: 'center' }}>
-          
-          <img src="../src/assets/images/logo-main.png" alt="" style={{ maxWidth: '100%' }} />
+          <img
+            src="../src/assets/images/listing_shipment.png"
+            alt=""
+            style={{ maxWidth: '100%' }}
+          />
         </div>
       </div>
     </div>

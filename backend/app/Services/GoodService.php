@@ -35,7 +35,7 @@ class GoodService
             }
       
 
-            return $query->paginate(10);
+            return $query->orderBy('created_at', 'desc')->paginate(10);
         });
     }
 

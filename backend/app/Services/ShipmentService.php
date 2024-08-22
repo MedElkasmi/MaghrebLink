@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Shipment;
 use Illuminate\Support\Facades\Cache;
 
+
 class ShipmentService {
 
     protected $cacheKey = 'shipments';
@@ -29,7 +30,7 @@ class ShipmentService {
             if (isset($filters['search'])) {
                 $query->where('tracking_number', 'like', "%{$filters['search']}%");
             }
-            return $query->paginate(10);
+            return $query->orderBy('created_at', 'desc')->paginate(10);
         });
     }
 
@@ -127,6 +128,17 @@ class ShipmentService {
             }
             return $query->paginate(10);
         });
+    }
+
+    public function getActiveShipments()
+    {
+        return Shipment::where('status', 'In-Transit')->get();
+    }
+
+    public function CompletedShipments(int $id, array $data) {
+        $shipment = Shipment::findOrFail($id);
+        $shipment->update($data);
+        return $shipment;
     }
 
 }
