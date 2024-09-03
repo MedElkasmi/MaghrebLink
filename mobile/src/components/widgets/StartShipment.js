@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
-import axiosInstance from '../../services/axiosConfig' // Ensure this is correctly set up
+import axiosInstance from '../../services/axiosConfig'
+import LocationFetcher from '../../services/LocationFetcher' // Adjust the import path as needed
 
 const StartShipment = () => {
   const [isGo, setIsGo] = useState(true) // Initial state is "Go"
+  const [isTracking, setIsTracking] = useState(false) // State to control LocationFetcher rendering
 
   const createShipment = async () => {
     if (isGo) {
@@ -39,7 +41,9 @@ const StartShipment = () => {
                     }
                   )
                   console.log('Shipment created:', response.data)
+
                   setIsGo(false)
+                  setIsTracking(true) // Start location tracking after creating the shipment
                 } catch (error) {
                   console.error('Error creating shipment:', error)
                   Alert.alert(
@@ -95,6 +99,7 @@ const StartShipment = () => {
                   )
                   console.log('Shipment finished:', response.data)
                   setIsGo(true) // Reset the button to "Go"
+                  setIsTracking(false) // Stop location tracking after finishing the shipment
                 } catch (error) {
                   console.error('Error finishing shipment:', error)
                   Alert.alert(
@@ -122,13 +127,16 @@ const StartShipment = () => {
   }
 
   return (
-    <TouchableOpacity onPress={createShipment} style={styles.container}>
-      <View style={styles.track}>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={createShipment} style={styles.track}>
         <Text style={styles.text}>
           {isGo ? 'Start Tracking' : 'Finish Tracking'}
         </Text>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+
+      {/* Render LocationFetcher only when isTracking is true */}
+      {isTracking && <LocationFetcher />}
+    </View>
   )
 }
 

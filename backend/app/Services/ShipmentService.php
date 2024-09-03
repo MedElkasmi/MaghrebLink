@@ -41,11 +41,15 @@ class ShipmentService {
         return $shipment;
     }
 
-    public function getShipmentById(int $id)
+    public function getShipmentById($tracking_number)
     {
-        return Cache::remember("shipment:{$id}", 600, function () use ($id) {
-            return Shipment::findOrFail($id);
-        });
+        // return Cache::remember("shipment:{$id}", 600, function () use ($id) {
+        //     return Shipment::findOrFail($id);
+        // });
+
+        return Shipment::where('tracking_number', $tracking_number)->first();
+
+
     }
 
     public function updateShipment(int $id, array $data)

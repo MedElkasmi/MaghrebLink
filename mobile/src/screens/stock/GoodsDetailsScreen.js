@@ -12,9 +12,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 const GoodsDetailsScreen = ({ route }) => {
   const { goodsId } = route.params
   const [goods, setGoods] = useState(null)
-  const [shipment, setShipment] = useState(null)
-  const [client, setClient] = useState(null)
-  const [receiver, setReceiver] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchGoodsDetails = async () => {
@@ -22,32 +20,18 @@ const GoodsDetailsScreen = ({ route }) => {
         const response = await axiosInstance.get(`/goods/${goodsId}`)
         const goodsData = response.data
         setGoods(goodsData)
-
-        // Fetch shipment details
-        const shipmentResponse = await axiosInstance.get(
-          `/shipments/${goodsData.shipment_id}`
-        )
-        setShipment(shipmentResponse.data)
-
-        // Fetch client details
-        const clientResponse = await axiosInstance.get(
-          `/clients/${goodsData.client_id}`
-        )
-        setClient(clientResponse.data)
-
-        // Fetch receiver details
-        const receiverResponse = await axiosInstance.get(
-          `/clients/${goodsData.receiver_id}`
-        )
-        setReceiver(receiverResponse.data)
+        console.log('Goods Data:', goodsData) // Debugging output
       } catch (error) {
         console.error('Error fetching goods details:', error)
+      } finally {
+        setLoading(false)
       }
     }
+
     fetchGoodsDetails()
   }, [goodsId])
 
-  if (!goods || !shipment || !client || !receiver) {
+  if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -56,19 +40,20 @@ const GoodsDetailsScreen = ({ route }) => {
     )
   }
 
+  if (!goods || !goods.client || !goods.receiver) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>
+          Error loading data. Please try again later.
+        </Text>
+      </View>
+    )
+  }
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Goods Details</Text>
-
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <MaterialIcons name="local-shipping" size={24} color="#333" />
-          <Text style={styles.cardTitle}>Shipment Details</Text>
-        </View>
-        <Text style={styles.value}>
-          Tracking Number: {shipment.tracking_number}
-        </Text>
-        <Text style={styles.value}>Status: {shipment.status}</Text>
+      <View style={styles.header}>
+        <MaterialIcons name="inventory" size={64} color="#fff" />
       </View>
 
       <View style={styles.card}>
@@ -76,8 +61,11 @@ const GoodsDetailsScreen = ({ route }) => {
           <MaterialIcons name="person" size={24} color="#333" />
           <Text style={styles.cardTitle}>Client Details</Text>
         </View>
-        <Text style={styles.value}>Name: {client.fullname}</Text>
-        <Text style={styles.value}>Email: {client.whatsapp}</Text>
+        <Text style={styles.value}>Name: {goods.client.fullname}</Text>
+        <Text style={styles.value}>WhatsApp: {goods.client.whatsapp}</Text>
+        <Text style={styles.value}>Country: {goods.client.country}</Text>
+        <Text style={styles.value}>City: {goods.client.city}</Text>
+        <Text style={styles.value}>Address: {goods.client.address}</Text>
       </View>
 
       <View style={styles.card}>
@@ -85,8 +73,11 @@ const GoodsDetailsScreen = ({ route }) => {
           <MaterialIcons name="person" size={24} color="#333" />
           <Text style={styles.cardTitle}>Receiver Details</Text>
         </View>
-        <Text style={styles.value}>Name: {receiver.fullname}</Text>
-        <Text style={styles.value}>Email: {receiver.whatsapp}</Text>
+        <Text style={styles.value}>Name: {goods.receiver.fullname}</Text>
+        <Text style={styles.value}>WhatsApp: {goods.receiver.whatsapp}</Text>
+        <Text style={styles.value}>Country: {goods.receiver.country}</Text>
+        <Text style={styles.value}>City: {goods.receiver.city}</Text>
+        <Text style={styles.value}>Address: {goods.receiver.address}</Text>
       </View>
 
       <View style={styles.card}>
@@ -95,9 +86,9 @@ const GoodsDetailsScreen = ({ route }) => {
           <Text style={styles.cardTitle}>Goods Details</Text>
         </View>
         <Text style={styles.value}>Product Code: {goods.product_code}</Text>
-        <Text style={styles.value}>Category: {goods.category}</Text>
-        <Text style={styles.value}>Quantity: {goods.quantity}</Text>
-        <Text style={styles.value}>Weight: {goods.weight}</Text>
+        <Text style={styles.value}>Status: {goods.status}</Text>
+        <Text style={styles.value}>Weight: {goods.weight} Kg</Text>
+        <Text style={styles.value}>Price: ${goods.price}</Text>
         <Text style={styles.value}>
           Storage Location: {goods.storage_location}
         </Text>
@@ -117,6 +108,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
+  },
+  header: {
+    backgroundColor: '#4A90E2',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  headerText: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#ff0000',
+    textAlign: 'center',
   },
   title: {
     fontSize: 24,

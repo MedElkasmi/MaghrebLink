@@ -15,8 +15,10 @@ import { Picker } from '@react-native-picker/picker'
 const AddGoodScreen = ({ navigation }) => {
   const [senderClients, setSenderClients] = useState('')
   const [receiverClients, setReceiverClients] = useState('')
+  const [selectedSenderId, setSelectedSenderId] = useState(null)
+  const [selectedReceiverId, setSelectedReceiverId] = useState(null)
   const [weight, setWeight] = useState('')
-  const [storageLocation, setStorageLocation] = useState('Warehouse A') // Default value
+  const [storageLocation, setStorageLocation] = useState('Alhoceima') // Default value
   const [senderSuggestions, setSenderSuggestions] = useState([])
   const [receiverSuggestions, setReceiverSuggestions] = useState([])
   const [loading, setLoading] = useState(false)
@@ -51,21 +53,24 @@ const AddGoodScreen = ({ navigation }) => {
 
   const handleSelectSenderClient = (client) => {
     setSenderClients(client.fullname)
+    setSelectedSenderId(client.id)
     setSenderSuggestions([])
   }
 
   const handleSelectReceiverClient = (client) => {
     setReceiverClients(client.fullname)
+    setSelectedReceiverId(client.id)
     setReceiverSuggestions([])
   }
 
   const handleAddGood = async () => {
     try {
-      const response = await axiosInstance.post('/goods', {
-        senderClients,
-        receiverClients,
-        weight,
-        storageLocation,
+      const response = await axiosInstance.post('/goods/store', {
+        client_id: selectedSenderId,
+        receiver_id: selectedReceiverId,
+        weight: weight,
+        storage_location: storageLocation,
+        status: 'unshipped',
       })
       if (response.status === 201) {
         alert('Goods added successfully!')
@@ -185,12 +190,11 @@ const AddGoodScreen = ({ navigation }) => {
           onValueChange={(itemValue) => setStorageLocation(itemValue)}
           style={styles.picker}
         >
-          <Picker.Item label="Warehouse A" value="Warehouse A" />
-          <Picker.Item label="Warehouse B" value="Warehouse B" />
-          <Picker.Item label="Warehouse C" value="Warehouse C" />
+          <Picker.Item label="Alhoceima" value="Alhoceima" />
+          <Picker.Item label="Nador" value="Nador" />
+          <Picker.Item label="Granada" value="Granada" />
         </Picker>
       </View>
-
       <TouchableOpacity style={styles.button} onPress={handleAddGood}>
         <Text style={styles.buttonText}>Add Goods</Text>
       </TouchableOpacity>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import StartShipment from '../components/widgets/StartShipment'
+import LocationFetcher from '../services/LocationFetcher'
 
 const HomeScreen = () => {
   return (
@@ -17,6 +18,7 @@ const HomeScreen = () => {
         </Text>
 
         <StartShipment />
+        <LocationFetcher />
       </View>
     </View>
   )

@@ -43,7 +43,7 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../assets/images/bg_login.png')} // Replace with your logo path
+        source={require('../assets/images/car_shipment.png')} // Replace with your logo path
         style={styles.logo}
       />
       <TextInput

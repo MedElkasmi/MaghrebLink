@@ -43,9 +43,9 @@ class ShipmentController extends Controller
         return response()->json(new ShipmentResource($shipment), 201);
     }
 
-    public function show($id)
+    public function show($tracking_number)
     {
-        $shipment = $this->shipmentService->getShipmentById($id);
+        $shipment = $this->shipmentService->getShipmentById($tracking_number);
         return response()->json($shipment);
     }
 

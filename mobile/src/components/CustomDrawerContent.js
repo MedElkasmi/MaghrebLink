@@ -70,6 +70,18 @@ const DrawerMenuItems = ({ navigation }) => (
       )}
       onPress={() => navigation.navigate('Dashboard')}
     />
+    <DrawerItem
+      label="Scanner"
+      icon={({ color, size }) => (
+        <Ionicons
+          name="person"
+          size={20}
+          color={COLORS.primary}
+          style={styles.icon}
+        />
+      )}
+      onPress={() => navigation.navigate('BarcodeScanner')}
+    />
   </View>
 )
 

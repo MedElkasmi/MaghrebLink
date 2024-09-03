@@ -70,7 +70,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/overview', [ShipmentController::class, 'overview']);
             Route::get('/qr/{qrCode}', [ShipmentController::class, 'getShipmentByQrCode']);
             Route::post('/store', [ShipmentController::class, 'store']);
-            Route::get('/{id}', [ShipmentController::class, 'show']);
+            Route::get('/{tracking_number}', [ShipmentController::class, 'show']);
             Route::put('/{id}', [ShipmentController::class, 'update']);
             Route::delete('/{id}', [ShipmentController::class, 'destroy']);
             Route::patch('/{id}/restore', [ShipmentController::class, 'restore']);
