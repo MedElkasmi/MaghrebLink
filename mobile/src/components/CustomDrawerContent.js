@@ -1,11 +1,12 @@
 import React, { memo } from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
-import { Ionicons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
+import AntDesign from '@expo/vector-icons/AntDesign'
 
 // Extracted constant styles for color and sizes
 const COLORS = {
-  primary: '#4A90E2',
+  primary: '#2E91A4',
   white: '#fff',
   black: '#000',
   lightGray: '#ddd',
@@ -31,10 +32,7 @@ const CustomDrawerContent = (props) => {
 // Separated Header as a sub-component for better readability and reusability
 const Header = ({ handleLogout }) => (
   <View style={styles.header}>
-    <Image
-      source={require('../../src/assets/images/truck.png')}
-      style={styles.logo}
-    />
+    <MaterialIcons name="" size={30} color={COLORS.white} />
     <Text style={styles.title}>User Name</Text>
     <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
       <Text style={styles.logoutButtonText}>Logout</Text>
@@ -48,8 +46,8 @@ const DrawerMenuItems = ({ navigation }) => (
     <DrawerItem
       label="Statistics"
       icon={({ color, size }) => (
-        <Ionicons
-          name="person"
+        <MaterialIcons
+          name="dashboard"
           size={20}
           color={COLORS.primary}
           style={styles.icon}
@@ -61,8 +59,8 @@ const DrawerMenuItems = ({ navigation }) => (
     <DrawerItem
       label="Settings"
       icon={({ color, size }) => (
-        <Ionicons
-          name="person"
+        <MaterialIcons
+          name="settings"
           size={20}
           color={COLORS.primary}
           style={styles.icon}
@@ -73,12 +71,7 @@ const DrawerMenuItems = ({ navigation }) => (
     <DrawerItem
       label="Scanner"
       icon={({ color, size }) => (
-        <Ionicons
-          name="person"
-          size={20}
-          color={COLORS.primary}
-          style={styles.icon}
-        />
+        <AntDesign name="barcode" size={20} color={COLORS.primary} />
       )}
       onPress={() => navigation.navigate('BarcodeScanner')}
     />

@@ -11,7 +11,7 @@ import {
   StatusBar,
 } from 'react-native'
 import axiosInstance from '../../services/axiosConfig'
-import { Ionicons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 
 const ClientListScreen = ({ navigation }) => {
   const [clients, setClients] = useState([])
@@ -71,7 +71,9 @@ const ClientListScreen = ({ navigation }) => {
       key={item.id.toString()}
     >
       <View style={styles.itemContainer}>
-        <View style={styles.iconContainer}></View>
+        <View style={styles.iconContainer}>
+          <MaterialIcons name="person" size={30} color="#fff" />
+        </View>
         <View style={styles.itemDetails}>
           <Text style={styles.itemTitle}>{item.fullname}</Text>
           <Text style={styles.itemSubtitle}>Whatsapp: {item.whatsapp}</Text>
@@ -87,7 +89,7 @@ const ClientListScreen = ({ navigation }) => {
       <ActivityIndicator
         style={styles.loadingIndicator}
         size="large"
-        color="#4A90E2"
+        color="#2E91A4"
       />
     )
   }
@@ -96,11 +98,6 @@ const ClientListScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
-        <Image
-          source={require('../../assets/images/listing_goods.png')} // Replace with your logo path
-          style={styles.logo}
-        />
-
         <View style={styles.searchAddContainer}>
           <TextInput
             style={styles.searchInput}
@@ -113,7 +110,7 @@ const ClientListScreen = ({ navigation }) => {
             style={styles.addButton}
             onPress={() => navigation.navigate('NewClient')}
           >
-            <Ionicons name="add-circle-outline" size={24} color="#fff" />
+            <MaterialIcons name="add" color="#fff" />
             <Text style={styles.addButtonText}>Add Client</Text>
           </TouchableOpacity>
         </View>
@@ -166,7 +163,7 @@ const styles = StyleSheet.create({
   addButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
@@ -191,7 +188,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,

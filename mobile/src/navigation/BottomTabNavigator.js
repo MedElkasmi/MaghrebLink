@@ -46,7 +46,7 @@ const BottomTabNavigator = ({ navigation }) => {
           },
         })}
         tabBarOptions={{
-          activeTintColor: '#4A90E2',
+          activeTintColor: '#2E91A4',
           inactiveTintColor: 'gray',
           style: {
             paddingBottom: 5,
@@ -105,13 +105,13 @@ const BottomTabNavigator = ({ navigation }) => {
           >
             <TouchableOpacity
               style={styles.actionButton}
-              onPress={() => navigation.navigate('AddClientScreen')}
+              onPress={() => navigation.navigate('NewClient')}
             >
               <Ionicons name="person-add-outline" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.actionButton}
-              onPress={() => navigation.navigate('AddGoodsScreen')}
+              onPress={() => navigation.navigate('NewGoods')}
             >
               <Ionicons name="add-circle-outline" size={24} color="#fff" />
             </TouchableOpacity>
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 5,

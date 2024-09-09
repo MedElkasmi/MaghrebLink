@@ -5,7 +5,7 @@ import LocationFetcher from '../../services/LocationFetcher' // Adjust the impor
 
 const StartShipment = () => {
   const [isGo, setIsGo] = useState(true) // Initial state is "Go"
-  const [isTracking, setIsTracking] = useState(false) // State to control LocationFetcher rendering
+  const [isFetching, setIsFetching] = useState(false) // State to control LocationFetcher
 
   const createShipment = async () => {
     if (isGo) {
@@ -16,6 +16,7 @@ const StartShipment = () => {
         if (ongoingShipment.data && ongoingShipment.data.length > 0) {
           Alert.alert('Active Shipment', 'You already have an active shipment.')
           setIsGo(false)
+          setIsFetching(true)
           return
         }
 
@@ -43,7 +44,7 @@ const StartShipment = () => {
                   console.log('Shipment created:', response.data)
 
                   setIsGo(false)
-                  setIsTracking(true) // Start location tracking after creating the shipment
+                  setIsFetching(true) // Start fetching after creating the shipment
                 } catch (error) {
                   console.error('Error creating shipment:', error)
                   Alert.alert(
@@ -99,7 +100,7 @@ const StartShipment = () => {
                   )
                   console.log('Shipment finished:', response.data)
                   setIsGo(true) // Reset the button to "Go"
-                  setIsTracking(false) // Stop location tracking after finishing the shipment
+                  setIsFetching(false) // Stop fetching after finishing the shipment
                 } catch (error) {
                   console.error('Error finishing shipment:', error)
                   Alert.alert(
@@ -134,8 +135,8 @@ const StartShipment = () => {
         </Text>
       </TouchableOpacity>
 
-      {/* Render LocationFetcher only when isTracking is true */}
-      {isTracking && <LocationFetcher />}
+      {/* Render LocationFetcher and control it with isFetching */}
+      <LocationFetcher isFetching={isFetching} />
     </View>
   )
 }
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   track: {
-    backgroundColor: '#cb422d',
+    backgroundColor: '#2E91A4',
     shadowColor: '#000',
     borderRadius: 10,
     shadowOffset: { width: 0, height: 3 },

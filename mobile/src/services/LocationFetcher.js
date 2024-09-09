@@ -3,8 +3,10 @@ import BackgroundTimer from 'react-native-background-timer'
 import Geolocation from 'react-native-geolocation-service'
 import axiosInstance from './axiosConfig'
 
-const LocationFetcher = () => {
+const LocationFetcher = ({ isFetching }) => {
   useEffect(() => {
+    let intervalId = null
+
     const fetchLocation = () => {
       console.log('Timer triggered')
       Geolocation.getCurrentPosition(
@@ -13,7 +15,7 @@ const LocationFetcher = () => {
           console.log(`Location: latitude=${latitude}, longitude=${longitude}`)
 
           const data = {
-            shipment_id: 301,
+            shipment_id: 301, // Example shipment_id, update accordingly
             latitude,
             longitude,
             status: 'Active',
@@ -26,20 +28,6 @@ const LocationFetcher = () => {
             })
             .catch((error) => {
               console.log('Error sending location to server: ', error)
-              if (error.response) {
-                console.log(
-                  'Server responded with status:',
-                  error.response.status
-                )
-                console.log('Response data:', error.response.data)
-              } else if (error.request) {
-                console.log(
-                  'Request made but no response received:',
-                  error.request
-                )
-              } else {
-                console.log('Error setting up request:', error.message)
-              }
             })
         },
         (error) => {
@@ -53,14 +41,21 @@ const LocationFetcher = () => {
       )
     }
 
-    // Start a timer that runs fetchLocation every 60 seconds
-    const intervalId = BackgroundTimer.setInterval(fetchLocation, 20000)
+    if (isFetching) {
+      intervalId = BackgroundTimer.setInterval(fetchLocation, 60000)
+    } else if (intervalId) {
+      BackgroundTimer.clearInterval(intervalId)
+    }
 
-    // Clean up interval on component unmount
-    return () => BackgroundTimer.clearInterval(intervalId)
-  }, [])
+    // Cleanup interval on component unmount or when isFetching changes
+    return () => {
+      if (intervalId) {
+        BackgroundTimer.clearInterval(intervalId)
+      }
+    }
+  }, [isFetching]) // Depend on isFetching to start or stop fetching
 
-  return null
+  return null // This component does not render anything
 }
 
 export default LocationFetcher

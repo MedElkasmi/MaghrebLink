@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import axiosInstance from '../../services/axiosConfig'
+import { Picker } from '@react-native-picker/picker'
 
 const AddClientScreen = ({ navigation }) => {
   const [fullname, setFullname] = useState('')
@@ -20,7 +21,7 @@ const AddClientScreen = ({ navigation }) => {
 
   const handleAddClient = async () => {
     try {
-      const response = await axiosInstance.post('/clients', {
+      const response = await axiosInstance.post('/clients/add', {
         fullname,
         whatsapp,
         country,
@@ -51,7 +52,7 @@ const AddClientScreen = ({ navigation }) => {
         <Ionicons
           name="person-outline"
           size={20}
-          color="#4A90E2"
+          color="#2E91A4"
           style={styles.icon}
         />
         <TextInput
@@ -62,18 +63,20 @@ const AddClientScreen = ({ navigation }) => {
           placeholderTextColor="#aaa"
         />
       </View>
+
       <View style={styles.inputContainer}>
         <Ionicons
           name="logo-whatsapp"
           size={20}
-          color="#4A90E2"
+          color="#2E91A4"
           style={styles.icon}
         />
         <TextInput
           placeholder="WhatsApp"
           value={whatsapp}
-          onChangeText={setWhatsapp}
+          onChangeText={(text) => setWhatsapp(text.replace(/[^0-9]/g, ''))}
           style={styles.input}
+          keyboardType="numeric"
           placeholderTextColor="#aaa"
         />
       </View>
@@ -81,22 +84,23 @@ const AddClientScreen = ({ navigation }) => {
         <Ionicons
           name="earth-outline"
           size={20}
-          color="#4A90E2"
+          color="#2E91A4"
           style={styles.icon}
         />
-        <TextInput
-          placeholder="Country"
-          value={country}
-          onChangeText={setCountry}
-          style={styles.input}
-          placeholderTextColor="#aaa"
-        />
+        <Picker
+          selectedValue={country}
+          onValueChange={(itemValue) => setCountry(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Morocco" value="Morocco" />
+          <Picker.Item label="Spain" value="Spain" />
+        </Picker>
       </View>
       <View style={styles.inputContainer}>
         <Ionicons
           name="location-outline"
           size={20}
-          color="#4A90E2"
+          color="#2E91A4"
           style={styles.icon}
         />
         <TextInput
@@ -111,7 +115,7 @@ const AddClientScreen = ({ navigation }) => {
         <Ionicons
           name="home-outline"
           size={20}
-          color="#4A90E2"
+          color="#2E91A4"
           style={styles.icon}
         />
         <TextInput
@@ -122,6 +126,7 @@ const AddClientScreen = ({ navigation }) => {
           placeholderTextColor="#aaa"
         />
       </View>
+
       <TouchableOpacity style={styles.button} onPress={handleAddClient}>
         <Text style={styles.buttonText}>Add Client</Text>
       </TouchableOpacity>
@@ -168,7 +173,7 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15,
@@ -184,6 +189,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     textTransform: 'uppercase',
+  },
+  picker: {
+    flex: 1,
+    height: 40,
+    color: '#333',
   },
 })
 

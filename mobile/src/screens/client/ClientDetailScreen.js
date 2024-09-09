@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f4f8',
   },
   header: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     paddingVertical: 20,
     paddingHorizontal: 15,
     borderRadius: 15,
@@ -111,19 +111,13 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    color: '#4A90E2',
+    color: '#2E91A4',
     fontWeight: 'bold',
     marginBottom: 5,
   },
   value: {
     fontSize: 16,
     color: '#333',
-  },
-  qrCode: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
-    marginTop: 30,
   },
 })
 

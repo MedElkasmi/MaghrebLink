@@ -18,7 +18,7 @@ const AddGoodScreen = ({ navigation }) => {
   const [selectedSenderId, setSelectedSenderId] = useState(null)
   const [selectedReceiverId, setSelectedReceiverId] = useState(null)
   const [weight, setWeight] = useState('')
-  const [storageLocation, setStorageLocation] = useState('Alhoceima') // Default value
+  const [storageLocation, setStorageLocation] = useState('Alhoceima')
   const [senderSuggestions, setSenderSuggestions] = useState([])
   const [receiverSuggestions, setReceiverSuggestions] = useState([])
   const [loading, setLoading] = useState(false)
@@ -27,7 +27,9 @@ const AddGoodScreen = ({ navigation }) => {
     if (query.length > 1) {
       setLoading(true)
       try {
-        const response = await axiosInstance.get(`/clients/search?q=${query}`)
+        const response = await axiosInstance.get(
+          `/clients/search?query=${query}`
+        )
         setSenderSuggestions(response.data)
       } catch (error) {
         console.error('Error fetching clients:', error)
@@ -41,7 +43,9 @@ const AddGoodScreen = ({ navigation }) => {
     if (query.length > 1) {
       setLoading(true)
       try {
-        const response = await axiosInstance.get(`/clients/search?q=${query}`)
+        const response = await axiosInstance.get(
+          `/clients/search?query=${query}`
+        )
         setReceiverSuggestions(response.data)
       } catch (error) {
         console.error('Error fetching clients:', error)
@@ -262,7 +266,7 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15,

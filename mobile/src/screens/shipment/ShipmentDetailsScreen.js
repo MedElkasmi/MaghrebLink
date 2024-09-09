@@ -55,12 +55,6 @@ const ShipmentDetailsScreen = ({ route }) => {
       <View style={styles.detailSection}>
         <Text style={styles.label}>Status</Text>
         <View style={styles.statusContainer}>
-          <View
-            style={[
-              styles.statusDot,
-              { backgroundColor: getStatusColor(shipment.status) },
-            ]}
-          />
           <Text style={styles.value}>{shipment.status}</Text>
         </View>
       </View>
@@ -74,26 +68,8 @@ const ShipmentDetailsScreen = ({ route }) => {
         <Text style={styles.label}>Date of Arrive</Text>
         <Text style={styles.value}>{shipment.shipment_date}</Text>
       </View>
-
-      <Image
-        style={styles.qrCode}
-        source={{ uri: `https://example.com/${shipment.qr_code}` }} // Replace with your actual QR code URL
-      />
     </ScrollView>
   )
-}
-
-const getStatusColor = (status) => {
-  switch (status.toLowerCase()) {
-    case 'In-Transit':
-      return 'blue'
-    case 'Arrived':
-      return 'green'
-    case 'Pending':
-      return 'yellow'
-    default:
-      return 'gray'
-  }
 }
 
 const styles = StyleSheet.create({
@@ -109,7 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f4f8',
   },
   header: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     paddingVertical: 20,
     paddingHorizontal: 15,
     borderRadius: 15,
@@ -136,7 +112,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    color: '#4A90E2',
+    color: '#2E91A4',
     fontWeight: 'bold',
     marginBottom: 5,
   },

@@ -20,7 +20,6 @@ const GoodsDetailsScreen = ({ route }) => {
         const response = await axiosInstance.get(`/goods/${goodsId}`)
         const goodsData = response.data
         setGoods(goodsData)
-        console.log('Goods Data:', goodsData) // Debugging output
       } catch (error) {
         console.error('Error fetching goods details:', error)
       } finally {
@@ -58,39 +57,68 @@ const GoodsDetailsScreen = ({ route }) => {
 
       <View style={styles.card}>
         <View style={styles.cardHeader}>
-          <MaterialIcons name="person" size={24} color="#333" />
+          <MaterialIcons name="person" size={24} color="#2E91A4" />
           <Text style={styles.cardTitle}>Client Details</Text>
         </View>
-        <Text style={styles.value}>Name: {goods.client.fullname}</Text>
-        <Text style={styles.value}>WhatsApp: {goods.client.whatsapp}</Text>
-        <Text style={styles.value}>Country: {goods.client.country}</Text>
-        <Text style={styles.value}>City: {goods.client.city}</Text>
-        <Text style={styles.value}>Address: {goods.client.address}</Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Name:</Text> {goods.client.fullname}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>WhatsApp:</Text> {goods.client.whatsapp}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Country:</Text> {goods.client.country}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>City:</Text> {goods.client.city}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Address:</Text> {goods.client.address}
+        </Text>
       </View>
 
       <View style={styles.card}>
         <View style={styles.cardHeader}>
-          <MaterialIcons name="person" size={24} color="#333" />
+          <MaterialIcons name="person" size={24} color="#2E91A4" />
           <Text style={styles.cardTitle}>Receiver Details</Text>
         </View>
-        <Text style={styles.value}>Name: {goods.receiver.fullname}</Text>
-        <Text style={styles.value}>WhatsApp: {goods.receiver.whatsapp}</Text>
-        <Text style={styles.value}>Country: {goods.receiver.country}</Text>
-        <Text style={styles.value}>City: {goods.receiver.city}</Text>
-        <Text style={styles.value}>Address: {goods.receiver.address}</Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Name:</Text> {goods.receiver.fullname}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>WhatsApp:</Text> {goods.receiver.whatsapp}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Country:</Text> {goods.receiver.country}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>City:</Text> {goods.receiver.city}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Address:</Text> {goods.receiver.address}
+        </Text>
       </View>
 
       <View style={styles.card}>
         <View style={styles.cardHeader}>
-          <MaterialIcons name="category" size={24} color="#333" />
+          <MaterialIcons name="category" size={24} color="#2E91A4" />
           <Text style={styles.cardTitle}>Goods Details</Text>
         </View>
-        <Text style={styles.value}>Product Code: {goods.product_code}</Text>
-        <Text style={styles.value}>Status: {goods.status}</Text>
-        <Text style={styles.value}>Weight: {goods.weight} Kg</Text>
-        <Text style={styles.value}>Price: ${goods.price}</Text>
         <Text style={styles.value}>
-          Storage Location: {goods.storage_location}
+          <Text style={styles.label}>Product Code:</Text> {goods.product_code}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Status</Text> {goods.status}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Weight:</Text> {goods.weight} Kg
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Price:</Text> ${goods.price}
+        </Text>
+        <Text style={styles.value}>
+          <Text style={styles.label}>Storage Location:</Text>{' '}
+          {goods.storage_location}
         </Text>
       </View>
     </ScrollView>
@@ -110,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     paddingVertical: 20,
     paddingHorizontal: 15,
     borderRadius: 15,
@@ -138,7 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: '#2E91A4',
     textAlign: 'center',
   },
   card: {
@@ -159,13 +187,17 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '800',
     marginLeft: 10,
-    color: '#333',
+    color: '#2E91A4',
   },
   value: {
     fontSize: 16,
     color: '#555',
+  },
+  label: {
+    fontWeight: '800',
+    color: '#2E91A4',
   },
 })
 

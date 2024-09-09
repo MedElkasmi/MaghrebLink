@@ -5,6 +5,7 @@ import {
   StyleSheet,
   PermissionsAndroid,
   Platform,
+  Alert, // Import Alert component
 } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import axiosInstance from '../services/axiosConfig'
@@ -59,6 +60,19 @@ const BarcodeScanner = () => {
       const response = await axiosInstance.get(`shipments/${trackingNumber}`)
       const shipmentData = response.data
       setShipmentData(shipmentData) // Store fetched data in state
+
+      // Show an alert with the fetched shipment data
+      Alert.alert(
+        'Shipment Details Fetched',
+        `Tracking Number: ${shipmentData.tracking_number}\n
+        Status: ${shipmentData.status}\n
+        Driver ID: ${shipmentData.driver_id}\n
+        Shipment Date: ${shipmentData.shipment_date}\n
+        Arrived Date: ${shipmentData.arrived_date}`,
+
+        [{ text: 'OK' }]
+      )
+
       console.log(shipmentData)
     } catch (error) {
       console.error('Error fetching shipment details:', error)
@@ -80,27 +94,6 @@ const BarcodeScanner = () => {
         onBarCodeRead={handleBarCodeScanned}
         captureAudio={false}
       />
-      <View style={styles.resultContainer}>
-        {shipmentData ? (
-          <View>
-            <Text style={styles.resultText}>
-              Tracking Number: {shipmentData.tracking_number}
-            </Text>
-            <Text style={styles.resultText}>
-              Driver ID: {shipmentData.driver_id}
-            </Text>
-            <Text style={styles.resultText}>
-              Shipment Date: {shipmentData.shipment_date}
-            </Text>
-            <Text style={styles.resultText}>
-              Arrived Date: {shipmentData.arrived_date}
-            </Text>
-            <Text style={styles.resultText}>Status: {shipmentData.status}</Text>
-          </View>
-        ) : (
-          <Text style={styles.resultText}>Scanned Data: {scannedData}</Text>
-        )}
-      </View>
     </View>
   )
 }

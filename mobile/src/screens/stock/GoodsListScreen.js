@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons'
 
 const GoodsListScreen = ({ navigation }) => {
   const [goods, setGoods] = useState([])
-  const [filteredGoods, setFilteredGoods] = useState([]) // For filtered goods based on search
+  const [filteredGoods, setFilteredGoods] = useState([])
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
@@ -37,10 +37,9 @@ const GoodsListScreen = ({ navigation }) => {
         setHasMore(false)
       } else {
         setGoods((prevGoods) => [...prevGoods, ...newGoods])
-        setFilteredGoods((prevFiltered) => [...prevFiltered, ...newGoods]) // Update filteredGoods with new goods
+        setFilteredGoods((prevFiltered) => [...prevFiltered, ...newGoods])
       }
     } catch (error) {
-      console.error('Error fetching goods:', error)
       alert('Error fetching goods: ' + error.message)
     } finally {
       setLoading(false)
@@ -70,16 +69,14 @@ const GoodsListScreen = ({ navigation }) => {
     >
       <View style={styles.itemContainer}>
         <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>
-            {item.product_code.substring(0, 3)}
-          </Text>
+          <Ionicons name="cube-outline" size={30} color="#fff" />
         </View>
         <View style={styles.itemDetails}>
           <View style={styles.infoRow}>
             <Ionicons
               name="scale-outline"
               size={25}
-              color="#4A90E2"
+              color="#2E91A4"
               style={styles.infoIcon}
             />
 
@@ -89,7 +86,7 @@ const GoodsListScreen = ({ navigation }) => {
             <Ionicons
               name="location-outline"
               size={27}
-              color="#4A90E2"
+              color="#2E91A4"
               style={styles.infoIcon}
             />
             <Text style={styles.cardText}>
@@ -107,7 +104,7 @@ const GoodsListScreen = ({ navigation }) => {
       <ActivityIndicator
         style={styles.loadingIndicator}
         size="large"
-        color="#4A90E2"
+        color="#2E91A4"
       />
     )
   }
@@ -116,11 +113,6 @@ const GoodsListScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
-        <Image
-          source={require('../../assets/images/listing_goods.png')} // Replace with your logo path
-          style={styles.logo}
-        />
-
         <View style={styles.searchAddContainer}>
           <TextInput
             style={styles.searchInput}
@@ -187,7 +179,7 @@ const styles = StyleSheet.create({
   addButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
@@ -212,7 +204,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,

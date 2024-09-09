@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import axiosInstance from '../../services/axiosConfig'
+import { MaterialIcons } from '@expo/vector-icons'
 
 const ShipmentListScreen = ({ navigation }) => {
   const [shipments, setShipments] = useState([])
@@ -52,7 +53,7 @@ const ShipmentListScreen = ({ navigation }) => {
   const handleSearch = (text) => {
     setSearch(text)
     const filteredData = shipments.filter((item) =>
-      item.tracking_number.toLowerCase().includes(text.toLowerCase())
+      item.tracking_number.includes(text)
     )
     setFilteredShipments(filteredData)
   }
@@ -72,9 +73,7 @@ const ShipmentListScreen = ({ navigation }) => {
     >
       <View style={styles.itemContainer}>
         <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>
-            {item.tracking_number.substring(0, 2)}
-          </Text>
+          <MaterialIcons name="local-shipping" size={30} color="#fff" />
         </View>
         <View style={styles.itemDetails}>
           <Text style={styles.itemTitle}>{item.tracking_number}</Text>
@@ -90,7 +89,7 @@ const ShipmentListScreen = ({ navigation }) => {
     return (
       <ActivityIndicator
         size="large"
-        color="#4A90E2"
+        color="#2E91A4"
         style={styles.loadingIndicator}
       />
     )
@@ -100,11 +99,6 @@ const ShipmentListScreen = ({ navigation }) => {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
-        <Image
-          source={require('../../assets/images/listing_shipment.png')} // Replace with your logo path
-          style={styles.logo}
-        />
-
         <TextInput
           style={styles.searchInput}
           placeholder="Search for any shipment info"
@@ -167,7 +161,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#2E91A4',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,

@@ -24,19 +24,16 @@ const LoginScreen = () => {
       })
 
       if (response.status === 200) {
-        const { token } = response.data // Assuming the token is returned in response.data.token
+        const { token } = response.data
 
-        // Store the token securely
         await AsyncStorage.setItem('authToken', token)
 
-        // Navigate to the main app screen
         navigation.navigate('Drawer')
       } else {
         alert('Login failed')
       }
     } catch (error) {
-      console.error('Login error:', error)
-      alert('Login failed: ' + error.message)
+      alert('Authentication failed')
     }
   }
 
@@ -64,7 +61,6 @@ const LoginScreen = () => {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
-      <Text style={styles.footer}>Forgot Password?</Text>
     </View>
   )
 }
@@ -113,10 +109,6 @@ const styles = StyleSheet.create({
     color: '#fff', // White text for the button
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  footer: {
-    color: '#4a90e2', // Matching the button color for the footer text
-    marginTop: 15,
   },
 })
 
