@@ -14,6 +14,6 @@ This project is designed to simplify logistics management for local companies, o
 - **Utilities:** Barcode Generation, GPS Tracking
 - **Deployment:** AWS Cloud
 
-Project Screenshot on Web and Mobile:
-<img src="https://imgur.com/ldtHEV1.jpg" alt="MaghrebTrack Web Dashboard" width="600">
-<img src="https://imgur.com/qbsqnr6.jpg" alt="MaghrebTrack Mobile Dashboard" width="600">
+Project Screenshot on Web and Mobile: <br> <br>
+<img src="https://imgur.com/ldtHEV1.jpg" alt="MaghrebTrack Web Dashboard" width="300" hight="350"> <br><br>
+<img src="https://imgur.com/qbsqnr6.jpg" alt="MaghrebTrack Mobile Dashboard" width="300" hight="350">
