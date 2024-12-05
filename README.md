@@ -15,9 +15,5 @@ This project is designed to simplify logistics management for local companies, o
 - **Deployment:** AWS Cloud
 
 Project Screenshot on Web and Mobile:
-<img src="https://imgur.com/ldtHEV1" alt="MaghrebTrack Web Dashboard" width="600">
-<img src="https://imgur.com/qbsqnr6" alt="MaghrebTrack Mobile Dashboard" width="600">
-
-<p align="center">
-  <img src="https://i.imgur.com/KuPVbbt.jpg" width="600" alt="accessibility text">
-</p>
+<img src="https://imgur.com/ldtHEV1.jpg" alt="MaghrebTrack Web Dashboard" width="600">
+<img src="https://imgur.com/qbsqnr6.jpg" alt="MaghrebTrack Mobile Dashboard" width="600">
